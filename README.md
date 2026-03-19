@@ -1,46 +1,47 @@
-# 🏦 BudgetMaster - Système de Gestion Budgétaire
+# BudgetMaster - Système de Gestion Budgétaire
 
-**Application web de gestion budgétaire personnelle** développée avec React, Node.js/Express et l'implémentation de patrons de conception professionnels.
+Application web de gestion budgétaire personnelle développée avec React, Node.js/Express et l'implémentation de patrons de conception professionnels.
 
 **Équipe**: Souleymane Sow, Moses Kasindi, Ruth Kegmo  
 **Session**: H2026  
-**Statut**: ✅ Phase II - Structure architecturale complétée
+**Statut**: Phase II - Structure architecturale complétée
 
 ---
 
-## 📋 Table des Matières
+## Table des Matières
 
-1. [À Propos](#about)
-2. [Démarrage Rapide](#quick-start)
-3. [Architecture](#architecture)
-4. [Patrons de Conception](#patterns)
-5. [Documentation](#documentation)
-6. [Installation Complète](#installation)
+1. À Propos
+2. Démarrage Rapide
+3. Architecture
+4. Patrons de Conception
+5. Documentation
+6. Installation Complète
 
 ---
 
-## <a name="about"></a>À Propos du Projet
+## À Propos du Projet
 
-BudgetMaster est une **application web moderne** permettant aux utilisateurs de :
+BudgetMaster est une application web moderne permettant aux utilisateurs de :
 
 ### Fonctionnalités Principales
-✅ **Gestion des comptes** - Créer compte et authentification sécurisée  
-✅ **Suivi des transactions** - Enregistrer revenus et dépenses  
-✅ **Calcul automatique** - Solde mis à jour en temps réel  
-✅ **Budget mensuel** - Définir et suivre limite mensuelle  
-✅ **Recommandations** - Messages d'aide intelligents  
-✅ **Rapports** - Vue d'ensemble et répartition par catégorie  
-✅ **Export** - Exporter les données en CSV  
+
+Gestion des comptes - Créer compte et authentification sécurisée  
+Suivi des transactions - Enregistrer revenus et dépenses  
+Calcul automatique - Solde mis à jour en temps réel  
+Budget mensuel - Définir et suivre limite mensuelle  
+Recommandations - Messages d'aide intelligents  
+Rapports - Vue d'ensemble et répartition par catégorie  
+Export - Exporter les données en CSV  
 
 ### Technologies
-- **Frontend**: React 19 + Vite + Bootstrap 5
-- **Backend**: Node.js + Express
-- **Authentification**: JWT + bcryptjs
-- **Base de données**: JSON (phase I), migration BDD prévue (phase IV)
+- Frontend: React 19 + Vite + Bootstrap 5
+- Backend: Node.js + Express
+- Authentification: JWT + bcryptjs
+- Base de données: JSON (phase I), migration BDD prévue (phase IV)
 
 ---
 
-## <a name="quick-start"></a>🚀 Démarrage Rapide
+## Démarrage Rapide
 
 ### Prérequis
 - Node.js v16+
@@ -53,10 +54,10 @@ BudgetMaster est une **application web moderne** permettant aux utilisateurs de 
 cd backend && npm install && npm run dev
 
 # 2. Frontend (nouveau terminal)
-cd code && npm install && npm run dev
+cd frontend && npm install && npm run dev
 ```
 
-**→ Pour plus de détails**, voir [QUICK_START.md](QUICK_START.md)
+Pour plus de détails, voir QUICK_START.md
 
 ### Test API
 ```bash
@@ -65,7 +66,7 @@ bash test_api.sh
 
 ---
 
-## <a name="architecture"></a>🏗️ Architecture
+## Architecture
 
 ### Structure en 3 Couches
 
@@ -91,73 +92,73 @@ Components → Contexts/Hooks → Services API → APIClient → HTTP
    ↓
 5. Frontend Context rechargé
    ↓
-6. Dashboard mis à jour automatiquement ✨
+6. Dashboard mis à jour automatiquement
 ```
 
-**→ Documentation complète**: [ARCHITECTURE.md](ARCHITECTURE.md)
+Documentation complète: ARCHITECTURE.md
 
 ---
 
-## <a name="patterns"></a>🎨 Patrons de Conception
+## Patrons de Conception
 
-### 1️⃣ SINGLETON - AuthService
-**Une seule instance** d'authentification dans l'application
+### 1. SINGLETON - AuthService
+Une seule instance d'authentification dans l'application
 
 ```javascript
 // Utilisation
 const authService = AuthService.getInstance();
 await authService.login(email, password);
 ```
-**Fichiers**: `backend/src/services/authService.js`, `code/src/services/AuthService.js`
+Fichiers: `backend/src/services/authService.js`, `frontend/src/services/AuthService.js`
 
-### 2️⃣ FAÇADE - APIClient & BudgetService
-**Interface simplifiée** pour opérations complexes
+### 2. FAÇADE - APIClient & BudgetService
+Interface simplifiée pour opérations complexes
 
 ```javascript
 // Simplifie tout:
 const result = await apiClient.post('/transactions', data);
 const summary = BudgetService.getSummary(userId);
 ```
-**Fichiers**: `code/src/services/api/apiClient.js`, `backend/src/services/budgetService.js`
+Fichiers: `frontend/src/services/api/apiClient.js`, `backend/src/services/budgetService.js`
 
-### 3️⃣ OBSERVER - NotificationService
-**Système d'événements** pour réactivité
+### 3. OBSERVER - NotificationService
+Système d'événements pour réactivité
 
 ```javascript
 // Notifier automatiquement tous les observateurs
 NotificationService.notify('transaction.added', data);
 ```
-**Fichiers**: `backend/src/services/notificationService.js`, `code/src/services/Observer.js`
+Fichiers: `backend/src/services/notificationService.js`, `frontend/src/services/Observer.js`
 
-**→ Guide détaillé**: [DESIGN_PATTERNS.md](DESIGN_PATTERNS.md)
+Guide détaillé: DESIGN_PATTERNS.md
 
 ---
 
-## <a name="documentation"></a>📚 Documentation
+## Documentation
 
 | Document | Contenu |
 |----------|---------|
-| **[QUICK_START.md](QUICK_START.md)** ⭐ | Installation et démarrage rapide |
-| **[ARCHITECTURE.md](ARCHITECTURE.md)** | Guide architecture complet |
-| **[DESIGN_PATTERNS.md](DESIGN_PATTERNS.md)** | Explications patrons de conception |
-| **[IMPLEMENTATION_CHECKLIST.md](IMPLEMENTATION_CHECKLIST.md)** | Checklist réalisation et roadmap |
-| **[SUMMARY.md](SUMMARY.md)** | Résumé de ce qui a été fait |
-| **[backend/README.md](backend/README.md)** | Spécifiques backend |
-| **[code/README_FRONTEND.md](code/README_FRONTEND.md)** | Spécifiques frontend |
-| **[documentation/SRS.md](documentation/SRS.md)** | Cahier des charges |
-| **[documentation/ADR.md](documentation/ADR.md)** | Décisions architecturales |
+| QUICK_START.md | Installation et démarrage rapide |
+| ARCHITECTURE.md | Guide architecture complet |
+| DESIGN_PATTERNS.md | Explications patrons de conception |
+| IMPLEMENTATION_CHECKLIST.md | Checklist réalisation et roadmap |
+| SUMMARY.md | Résumé de ce qui a été fait |
+| backend/README.md | Spécifiques backend |
+| frontend/README_FRONTEND.md | Spécifiques frontend |
+| documentation/SRS.md | Cahier des charges |
+| documentation/ADR.md | Décisions architecturales |
 
 ---
 
-## <a name="installation"></a>⚙️ Installation Complète
+## Installation Complète
 
-### 1️⃣ Cloner le Dépôt
+### 1. Cloner le Dépôt
 ```bash
 git clone https://github.com/ssow520/BudgetMaster_MP6.git
 cd BudgetMaster_MP6
 ```
 
-### 2️⃣ Backend Setup
+### 2. Backend Setup
 ```bash
 cd backend
 
@@ -172,23 +173,23 @@ cat .env
 npm run dev
 ```
 
-### 3️⃣ Frontend Setup (nouveau terminal)
+### 3. Frontend Setup (nouveau terminal)
 ```bash
-cd code
+cd frontend
 
 # Installer les dépendances
 npm install
 
 # Configurer variables
-echo "VITE_API_BASE_URL=http://localhost:5000/api" > .env.local
+echo "VITE_API_BASE_URL=http://localhost:3001/api" > .env.local
 
 # Démarrer l'app
 npm run dev
 ```
 
-### 4️⃣ Vérifier que tout fonctionne
+### 4. Vérifier que tout fonctionne
 ```bash
-# Backend → http://localhost:5000/api/health
+# Backend → http://localhost:3001/api/health
 # Frontend → http://localhost:5173
 
 # Ou tester l'API:
@@ -197,7 +198,7 @@ bash test_api.sh
 
 ---
 
-## 📊 Endpoints API
+## Endpoints API
 
 ### Authentification
 ```
@@ -230,7 +231,7 @@ GET    /api/budget/export/csv           Export CSV
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ### Test API
 ```bash
@@ -239,7 +240,7 @@ bash test_api.sh  # 11 tests d'endpoints
 
 ### Test Frontend
 ```bash
-cd code
+cd frontend
 npm test          # Tests unitaires
 npm run test:watch # Tests en continu
 ```
@@ -253,11 +254,11 @@ npm run test:watch # Tests en continu
 
 ---
 
-## 📁 Structure du Projet
+## Structure du Projet
 
 ```
 BudgetMaster_MP6/
-├── QUICK_START.md ⭐
+├── QUICK_START.md
 ├── ARCHITECTURE.md
 ├── DESIGN_PATTERNS.md
 ├── IMPLEMENTATION_CHECKLIST.md
@@ -270,7 +271,7 @@ BudgetMaster_MP6/
 │   │   ├── server.js (Point d'entrée)
 │   │   ├── config/ (Configuration BD)
 │   │   ├── controllers/ (HTTP handlers)
-│   │   ├── services/ (🎨 Métier + patrons)
+│   │   ├── services/ (Métier + patrons)
 │   │   ├── repositories/ (Accès données)
 │   │   ├── routes/ (Routes API)
 │   │   ├── middleware/ (Auth, erreurs)
@@ -280,10 +281,10 @@ BudgetMaster_MP6/
 │   ├── .env
 │   └── README.md
 │
-├── code/
+├── frontend/
 │   ├── src/
 │   │   ├── components/ (À implémenter)
-│   │   ├── services/ (🎨 Patrons + API)
+│   │   ├── services/ (Patrons + API)
 │   │   ├── context/ (React contexts)
 │   │   ├── hooks/ (Hooks personnalisés)
 │   │   ├── utils/ (Helpers)
@@ -303,81 +304,81 @@ BudgetMaster_MP6/
 
 ---
 
-## 🎯 Prochaines Étapes (Phase III)
+## Prochaines Étapes (Phase III)
 
 ### Priorités
-1. ✅ Implémenter composants React principaux
-2. ✅ Intégrer authentification frontend
-3. ✅ Développer pages transactions et budget
-4. ✅ Tests et optimisations
-5. ✅ Préparation présentation
+1. Implémenter composants React principaux
+2. Intégrer authentification frontend
+3. Développer pages transactions et budget
+4. Tests et optimisations
+5. Préparation présentation
 
 ### Roadmap Complète
-- **Phase II** (Actuelle): ✅ Architecture et base
-- **Phase III**: 🔄 Développement composants
-- **Phase IV**: 📦 Finalisations et déploiement
+- Phase II (Actuelle): Architecture et base
+- Phase III: Développement composants
+- Phase IV: Finalisations et déploiement
 
-**→ Détails complets**: [IMPLEMENTATION_CHECKLIST.md](IMPLEMENTATION_CHECKLIST.md)
-
----
-
-## 🔒 Sécurité
-
-✅ **Authentification JWT** avec tokens expiration  
-✅ **Mots de passe hashés** avec bcryptjs  
-✅ **CORS configuré** pour communication sécurisée  
-✅ **Validation serveur** sur tous les endpoints  
-✅ **SessionStorage** pour tokens (pas localStorage)  
-✅ **Isolation données** par utilisateur  
+Détails complets: IMPLEMENTATION_CHECKLIST.md
 
 ---
 
-## 📈 Performance
+## Sécurité
 
-✅ **Temps réponse** < 5 secondes  
-✅ **Vite build tool** pour frontend rapide  
-✅ **API optimisée** (sans ORM lourd)  
-✅ **Cache local** des données (localStorage)  
-✅ **Compression** prête pour production  
+Authentification JWT avec tokens expiration  
+Mots de passe hashés avec bcryptjs  
+CORS configuré pour communication sécurisée  
+Validation serveur sur tous les endpoints  
+SessionStorage pour tokens (pas localStorage)  
+Isolation données par utilisateur  
 
 ---
 
-## 🤝 Contribution
+## Performance
+
+Temps réponse < 5 secondes  
+Vite build tool pour frontend rapide  
+API optimisée (sans ORM lourd)  
+Cache local des données (localStorage)  
+Compression prête pour production
+
+---
+
+## Contribution
 
 ### Pour développer une feature
 
-1. **Créer une branche**
+1. Créer une branche
 ```bash
 git checkout -b feature/ma-feature
 ```
 
-2. **Développer et tester**
+2. Développer et tester
 ```bash
 npm run dev    # Lancer serveur
 npm test       # Tests
 npm run lint   # Vérifier code
 ```
 
-3. **Commit avec messages clairs**
+3. Commit avec messages clairs
 ```bash
 git add .
 git commit -m "[FEATURE] Description courte"
 ```
 
-4. **Push et Pull Request**
+4. Push et Pull Request
 ```bash
 git push origin feature/ma-feature
 ```
 
 ---
 
-## 📞 Support
+## Support
 
 ### Ressources
-- 📖 [Architectures patterns guide](ARCHITECTURE.md)
-- 🎨 [Design patterns guide](DESIGN_PATTERNS.md)
-- 🚀 [Quick start guide](QUICK_START.md)
-- 📚 [SRS specification](documentation/SRS.md)
+- Architectures patterns guide: ARCHITECTURE.md
+- Design patterns guide: DESIGN_PATTERNS.md
+- Quick start guide: QUICK_START.md
+- SRS specification: documentation/SRS.md
 
 ### Commandes Utiles
 ```bash
@@ -395,59 +396,59 @@ npm test         # Tests
 
 ---
 
-## 📋 Checklist
+## Checklist
 
-- ✅ Base de projet structurée
-- ✅ 3 patrons de conception implémentés
-- ✅ Backend fonctionnel avec 20+ endpoints
-- ✅ Frontend structure prête
-- ✅ Authentification JWT sécurisée
-- ✅ Documentation complète
-- ✅ Test API disponible
+- Base de projet structurée
+- 3 patrons de conception implémentés
+- Backend fonctionnel avec 20+ endpoints
+- Frontend structure prête
+- Authentification JWT sécurisée
+- Documentation complète
+- Test API disponible
 
 ---
 
-## 📄 Licence
+## Licence
 
 Projet académique - LaSalle College
 
 ---
 
-## 👥 Équipe
+## Équipe
 
-- **Souleymane Sow** - Lead Backend & Architecture
-- **Moses Kasindi** - Frontend & Auth
-- **Ruth Kegmo** - Dashboard & Budget Logic
+- Souleymane Sow - Lead Backend & Architecture
+- Moses Kasindi - Frontend & Auth
+- Ruth Kegmo - Dashboard & Budget Logic
 
-**Enseignant**: Houssem Zouaghi
+Enseignant: Houssem Zouaghi
 
 ---
 
-## 📅 Timeline
+## Timeline
 
 | Phase | Période | Statut | Livrables |
 |-------|---------|--------|-----------|
-| I | 8-25 jan | ✅ Complétée | Setup projet |
-| II | 26 jan-22 fév | 🔄 En cours | Architecture & patterns |
-| III | 23 fév-22 mars | 📅 À venir | Développement features |
-| IV | 23 mars-17 avril | 📅 À venir | Finalisations & déploiement |
+| I | 8-25 jan | Complétée | Setup projet |
+| II | 26 jan-22 fév | En cours | Architecture & patterns |
+| III | 23 fév-22 mars | À venir | Développement features |
+| IV | 23 mars-17 avril | À venir | Finalisations & déploiement |
 
 ---
 
-## 🎓 Apprentissage
+## Apprentissage
 
 Cette projet couvre:
-- ✅ Patrons de conception (Singleton, Façade, Observer)
-- ✅ Architecture logicielle professionnelle
-- ✅ Full-stack development (Frontend + Backend)
-- ✅ Authentification et sécurité
-- ✅ API REST design
-- ✅ Git workflows
-- ✅ Documentation professionnelle
+- Patrons de conception (Singleton, Façade, Observer)
+- Architecture logicielle professionnelle
+- Full-stack development (Frontend + Backend)
+- Authentification et sécurité
+- API REST design
+- Git workflows
+- Documentation professionnelle
 
 ---
 
-## 🚀 Commencer Maintenant
+## Commencer Maintenant
 
 ```bash
 # 1. Cloner
@@ -458,24 +459,17 @@ cat QUICK_START.md
 
 # 3. Démarrer
 cd backend && npm install && npm run dev &
-cd code && npm install && npm run dev
+cd frontend && npm install && npm run dev
 
 # 4. Visiter
 # Frontend: http://localhost:5173
-# Backend: http://localhost:5000
+# Backend: http://localhost:3001
 ```
 
-**→ Lisez [QUICK_START.md](QUICK_START.md) pour instructions détaillées!**
+Lisez QUICK_START.md pour instructions détaillées!
 
 ---
 
-**Bon développement! 💪🚀**
+Bon développement!
 
 Dernière mise à jour: 18 mars 2026
-- [ ] Use the template file `ADR.md` to create your own ADRs .
-- [ ] You will add your code in the `/code` folder.
-- [ ] You will add your documentation in the `/documentation` folder.
-
-## Read more
-- [Architecture Decision Records (ADR) template by Joel Parker Henderson](https://github.com/joelparkerhenderson/architecture-decision-record?tab=readme-ov-file)
-- [ADR Website](https://adr.github.io/)
