@@ -48,7 +48,7 @@ Export - Exporter les données en CSV
 - npm v7+
 - Git
 
-### Installation (2 minutes)
+### Installation
 ```bash
 # 1. Backend
 cd backend && npm install && npm run dev
@@ -138,11 +138,7 @@ Guide détaillé: DESIGN_PATTERNS.md
 
 | Document | Contenu |
 |----------|---------|
-| QUICK_START.md | Installation et démarrage rapide |
-| ARCHITECTURE.md | Guide architecture complet |
 | DESIGN_PATTERNS.md | Explications patrons de conception |
-| IMPLEMENTATION_CHECKLIST.md | Checklist réalisation et roadmap |
-| SUMMARY.md | Résumé de ce qui a été fait |
 | backend/README.md | Spécifiques backend |
 | frontend/README_FRONTEND.md | Spécifiques frontend |
 | documentation/SRS.md | Cahier des charges |
@@ -258,11 +254,8 @@ npm run test:watch # Tests en continu
 
 ```
 BudgetMaster_MP6/
-├── QUICK_START.md
 ├── ARCHITECTURE.md
 ├── DESIGN_PATTERNS.md
-├── IMPLEMENTATION_CHECKLIST.md
-├── SUMMARY.md
 ├── .gitignore
 ├── test_api.sh
 │

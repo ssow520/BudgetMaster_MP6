@@ -6,7 +6,7 @@
 set -e
 
 # Configuration
-API_URL="http://localhost:5000/api"
+API_URL="http://localhost:3001/api"
 USER_EMAIL="test@example.com"
 USER_PASSWORD="TestPassword123"
 USER_FIRSTNAME="John"
