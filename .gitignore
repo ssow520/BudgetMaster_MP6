@@ -1,1 +1,85 @@
+# ===== DÉPENDANCES =====
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ===== VARIABLES D'ENVIRONNEMENT =====
+.env
+.env.local
+.env.*.local
+
+# ===== BUILD =====
+dist/
+build/
+.next/
+out/
+
+# ===== IDE =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 .DS_Store
+.editorconfig
+
+# ===== LOGS =====
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# ===== CACHE =====
+.cache/
+.eslintcache
+.stylelintcache
+
+# ===== SYSTÈME =====
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+desktop.ini
+
+# ===== TESTS =====
+coverage/
+.nyc_output/
+junit.xml
+
+# ===== DONNÉES LOCALES =====
+backend/data/database.json
+database.db
+*.sqlite
+*.db
+
+# ===== TEMPORAIRES =====
+tmp/
+temp/
+*.tmp
+
+# ===== EDITOR BACKUP =====
+*~
+*.bak
+*.swp
+*.swo
+
+# ===== VITE =====
+.vite/
+
+# ===== DOCKER =====
+.dockerignore
+Dockerfile
+
+# ===== CI/CD =====
+.github/
+.gitlab-ci.yml
+.circleci/
+
+# ===== TESTING =====
+.nyc_output
+coverage
+junit.xml
+test-results.xml
