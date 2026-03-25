@@ -666,3 +666,68 @@ test('Observer notification', () => {
 **Équipe**: Souleymane Sow, Moses Kasindi, Ruth Kegmo  
 **Session**: H2026  
 **Dernière mise à jour**: 2026-02-22
+
+---
+
+## 1️⃣-B SINGLETON - Database (ajout Phase III)
+
+### Problème résolu
+
+Sans Singleton, `loadDatabase()` faisait `fs.readFileSync()` à chaque appel.
+Pour un simple `register`, cela représentait 3 lectures disque consécutives.
+```javascript
+// AVANT — 3 lectures disque pour un register ❌
+static emailExists(email) {
+  const db = loadDatabase(); // lecture disque
+  return db.users.some(u => u.email === email);
+}
+static create(userData) {
+  const db = loadDatabase(); // lecture disque encore
+  db.users.push(newUser);
+  saveDatabase(db);
+}
+```
+
+### Solution
+```javascript
+// APRÈS — 0 lecture disque, accès mémoire ✅
+class Database {
+  constructor() {
+    if (Database._instance) return Database._instance;
+    this._data = this._readFromDisk(); // lecture UNE SEULE FOIS
+    Database._instance = this;
+    console.log('[Database] Singleton instancié — données chargées en mémoire');
+  }
+
+  static getInstance() {
+    if (!Database._instance) new Database();
+    return Database._instance;
+  }
+
+  getData()          { return this._data; }
+  setData(newData)   { this._data = newData; this._writeToDisk(); }
+}
+
+export function loadDatabase() { return Database.getInstance().getData(); }
+export function saveDatabase(data) { Database.getInstance().setData(data); }
+```
+
+### Impact
+
+| | Avant | Après |
+|---|---|---|
+| `loadDatabase()` | Lecture disque | Accès RAM |
+| Lectures pour `register` | 3 | 0 |
+| Cohérence des données | Non garantie | Garantie |
+| Backup automatique | Non | Oui (.bak) |
+
+### Avantages
+
+✅ Performance : zéro lecture disque après démarrage
+✅ Cohérence : tous les repositories partagent le même état
+✅ Rétrocompatible : aucune modification dans les repositories
+✅ Traçabilité : log au démarrage confirme l'instanciation unique
+
+---
+
+**Dernière mise à jour**: 2026-03-25 — Phase III

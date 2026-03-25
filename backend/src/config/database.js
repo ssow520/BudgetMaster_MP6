@@ -1,7 +1,5 @@
 /**
- * Configuration de la base de données
- * Pour la phase initiale, utilise un stockage JSON en mémoire
- * À remplacer par MongoDB ou PostgreSQL en production
+ * Database - Pattern SINGLETON
  */
 
 import fs from 'fs';
@@ -9,72 +7,94 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dbFilePath = path.join(__dirname, '../../data/database.json');
+const DB_FILE_PATH = path.join(__dirname, '../../data/database.json');
 
-/**
- * Initialise la base de données
- */
-function initializeDatabase() {
-  // Créer le répertoire data s'il n'existe pas
-  const dataDir = path.join(__dirname, '../../data');
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
+const EMPTY_DB = { users: [], transactions: [], budgets: [] };
 
-  // Si la base n'existe pas, créer la structure
-  if (!fs.existsSync(dbFilePath)) {
-    const initialData = {
-      users: [],
-      transactions: [],
-      budgets: [],
-    };
-    fs.writeFileSync(dbFilePath, JSON.stringify(initialData, null, 2));
-  }
-}
-
-/**
- * Charge les données de la base
- */
-export function loadDatabase() {
-  try {
-    if (!fs.existsSync(dbFilePath)) {
-      initializeDatabase();
+class Database {
+  constructor() {
+    if (Database._instance) {
+      return Database._instance;
     }
-    const data = fs.readFileSync(dbFilePath, 'utf-8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Erreur lors du chargement de la base de données:', error);
-    return { users: [], transactions: [], budgets: [] };
+    this._data = null;
+    this._filePath = DB_FILE_PATH;
+    this._init();
+    Database._instance = this;
+    console.log('[Database] Singleton instancié — données chargées en mémoire');
   }
-}
 
-/**
- * Sauvegarde les données dans la base
- */
-export function saveDatabase(data) {
-  try {
-    const dataDir = path.join(__dirname, '../../data');
+  static getInstance() {
+    if (!Database._instance) {
+      new Database();
+    }
+    return Database._instance;
+  }
+
+  _init() {
+    const dataDir = path.dirname(this._filePath);
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
+      console.log('[Database] Répertoire data/ créé');
     }
-    fs.writeFileSync(dbFilePath, JSON.stringify(data, null, 2));
-  } catch (error) {
-    console.error('Erreur lors de la sauvegarde de la base de données:', error);
+    if (!fs.existsSync(this._filePath)) {
+      fs.writeFileSync(this._filePath, JSON.stringify(EMPTY_DB, null, 2));
+      console.log('[Database] Fichier database.json créé');
+    }
+    this._data = this._readFromDisk();
+  }
+
+  _readFromDisk() {
+    try {
+      const raw = fs.readFileSync(this._filePath, 'utf-8');
+      return JSON.parse(raw);
+    } catch (error) {
+      console.error('[Database] Erreur lecture fichier:', error.message);
+      return { ...EMPTY_DB };
+    }
+  }
+
+  _writeToDisk() {
+    try {
+      if (fs.existsSync(this._filePath)) {
+        fs.copyFileSync(this._filePath, this._filePath + '.bak');
+      }
+      fs.writeFileSync(this._filePath, JSON.stringify(this._data, null, 2));
+    } catch (error) {
+      console.error('[Database] Erreur écriture fichier:', error.message);
+      throw error;
+    }
+  }
+
+  getData() {
+    return this._data;
+  }
+
+  setData(newData) {
+    this._data = newData;
+    this._writeToDisk();
+  }
+
+  reset() {
+    this._data = { ...EMPTY_DB };
+    this._writeToDisk();
+    console.log('[Database] Base de données réinitialisée');
+    return this._data;
   }
 }
 
-/**
- * Réinitialise la base de données
- */
-export function resetDatabase() {
-  const initialData = {
-    users: [],
-    transactions: [],
-    budgets: [],
-  };
-  saveDatabase(initialData);
-  return initialData;
+Database._instance = null;
+const dbInstance = new Database();
+
+export function loadDatabase() {
+  return Database.getInstance().getData();
 }
 
-// Initialiser au chargement du module
-initializeDatabase();
+export function saveDatabase(data) {
+  Database.getInstance().setData(data);
+}
+
+export function resetDatabase() {
+  return Database.getInstance().reset();
+}
+
+export default Database;

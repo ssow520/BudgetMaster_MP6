@@ -409,3 +409,60 @@ GET  /api/budget/export/csv           → Export CSV (protégé)
 **Équipe**: Souleymane Sow, Moses Kasindi, Ruth Kegmo  
 **Session**: H2026  
 **Dernière mise à jour**: 2026-02-22
+
+---
+
+## Améliorations Phase III
+
+### Singleton Database (ajout Phase III)
+
+Le patron Singleton a été étendu à la base de données. Avant la Phase III,
+chaque appel à `loadDatabase()` effectuait une lecture disque. Désormais,
+les données sont chargées une seule fois en mémoire au démarrage.
+
+**Avant (Phase II) :**
+```javascript
+// Lecture disque à chaque appel ❌
+export function loadDatabase() {
+  return JSON.parse(fs.readFileSync(dbFilePath, 'utf-8'));
+}
+```
+
+**Après (Phase III) :**
+```javascript
+// Accès mémoire — zéro I/O ✅
+export function loadDatabase() {
+  return Database.getInstance().getData();
+}
+```
+
+**Double mécanisme de protection :**
+1. Cache de modules Node.js — même import = même objet
+2. Variable statique `Database._instance` — guard dans le constructor
+
+### Middleware d'erreur centralisé (ajout Phase III)
+
+Fichier dédié `src/middleware/errorHandler.js` séparé de `authMiddleware.js`.
+Implémente le patron Chain of Responsibility d'Express.
+
+- `errorHandler` — intercepte toutes les erreurs, masque les détails en production
+- `notFoundHandler` — gère les routes inexistantes
+- `validate` — applique un schéma Joi à `req.body`
+
+### Tests unitaires (ajout Phase III)
+```
+backend/src/__tests__/
+├── database.test.js    → 14 tests — Singleton Database
+└── authService.test.js → 10 tests — Singleton AuthService + bcrypt + JWT
+```
+
+**Lancer les tests :**
+```bash
+npm test -w backend
+```
+
+**Résultats : 24/24 tests passent**
+
+---
+
+**Dernière mise à jour**: 2026-03-25 — Phase III
