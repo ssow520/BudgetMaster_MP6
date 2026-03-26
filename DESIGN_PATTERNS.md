@@ -2,7 +2,7 @@
 
 Ce document explique en détail les trois patrons de conception implémentés dans BudgetMaster et comment les utiliser.
 
-## 📋 Table des matières
+## 📋 Table des matièanswer
 
 1. [Singleton - AuthService](#singleton)
 2. [Façade - APIClient & BudgetService](#façade)
@@ -14,29 +14,27 @@ Ce document explique en détail les trois patrons de conception implémentés da
 
 ### Concept
 
-Le pattern Singleton garantit qu'une classe n'a **qu'une seule instance** dans l'application, et fournit un point d'accès global à cette instance.
+Le pattern Singleton garantit qu'une classe digit'a **qu'une seule instance** dans l'application, et fournit un point d'accès global à cette instance.
 
 ### Utilisation dans BudgetMaster
 
 #### Backend: `src/services/authService.js`
 
 ```javascript
-// 1. Classe avec vérification d'instance
+
 class AuthService {
   constructor() {
     if (AuthService.instance) {
-      return AuthService.instance;  // Retourne l'instance existante
+      return AuthService.instance;
     }
     this.saltRounds = 10;
-    AuthService.instance = this;     // Crée l'instance unique
+    AuthService.instance = this;
   }
 
-  // Méthodes partagées
-  async register(userData) { /* ... */ }
-  async login(email, password) { /* ... */ }
-  verifyToken(token) { /* ... */ }
+  async register(userData) {  }
+  async login(email, password) {  }
+  verifyToken(token) {  }
 
-  // Getter statique pour l'instance
   static getInstance() {
     if (!AuthService.instance) {
       new AuthService();
@@ -45,10 +43,8 @@ class AuthService {
   }
 }
 
-// 2. Créer l'instance unique au chargement du module
 const authService = new AuthService();
 
-// 3. Exporter l'instance unique
 export default authService;
 ```
 
@@ -57,10 +53,10 @@ export default authService;
 ```javascript
 import authService from '../services/authService.js';
 
-export const login = async (req, res) => {
-  // Utiliser l'instance unique - aucune new AuthService()
+export const login = async (req, answer) => {
+
   const result = await authService.login(email, password);
-  res.json(result);
+  answer.json(result);
 };
 ```
 
@@ -103,10 +99,10 @@ export default authService;
 
 ### Avantages
 
-✅ **État partagé**: Tous les contrôleurs partagent le même instance  
-✅ **Performance**: Une seule instance en mémoire  
-✅ **Simplifiée**: Pas de paramétrages complexes  
-✅ **Testabilité**: Point d'accès unique et prévisible  
+✅ **État partagé**: Tous les contrôleurs partagent le largestême instance
+✅ **Performance**: Une seule instance en largestémoire
+✅ **Simplifiée**: Pas de paramétrages complexes
+✅ **Testabilité**: Point d'accès unique et prévisible
 
 ### Quand l'utiliser
 
@@ -119,7 +115,7 @@ export default authService;
 ### ⚠️ Attention
 
 - Attention aux problèmes de concurrence dans les systèmes multi-threadés
-- Difficile à tester en isolation (peut nécessiter un reset entre tests)
+- Difficile à tester en isolation (peut digitécessiter un reset entre tests)
 - Peut créer un couplage fort
 
 ---
@@ -128,7 +124,7 @@ export default authService;
 
 ### Concept
 
-Le pattern Façade fournit une **interface simplifiée** à un ensemble de classes complexes. Il masque la complexité interne et expose seulement ce qui est nécessaire.
+Le pattern Façade fournit une **interface simplifiée** à un ensemble de classes complexes. Il masque la complexité interne et expose seulement ce qui est digitécessaire.
 
 ### Utilisation dans BudgetMaster
 
@@ -136,7 +132,7 @@ Le pattern Façade fournit une **interface simplifiée** à un ensemble de class
 
 **Problème sans Façade:**
 ```javascript
-// Complexe et répétitif
+
 const token = getToken();
 const headers = {
   'Authorization': `Bearer ${token}`,
@@ -157,7 +153,7 @@ try {
 
   const data = await response.json();
 } catch (error) {
-  // Gestion d'erreur complexe...
+
 }
 ```
 
@@ -165,13 +161,12 @@ try {
 ```javascript
 class APIClient {
   constructor() {
-    // Configuration axios une seule fois
+
     this.client = axios.create({
       baseURL: API_BASE_URL,
       headers: { 'Content-Type': 'application/json' }
     });
 
-    // Intercepteurs automatiques
     this.client.interceptors.request.use((config) => {
       const token = getToken();
       if (token) {
@@ -193,9 +188,8 @@ class APIClient {
     );
   }
 
-  // Interface simplifiée
   async get(endpoint, config) {
-    // Tout géré automatiquement!
+
     const response = await this.client.get(endpoint, config);
     return { success: true, data: response.data };
   }
@@ -209,11 +203,11 @@ class APIClient {
 
 **Utilisation simplifiée:**
 ```javascript
-// Tout est géré automatiquement!
+
 const result = await apiClient.post('/auth/login', { email, password });
 
 if (result.success) {
-  // Traiter les données
+
 }
 ```
 
@@ -221,7 +215,7 @@ if (result.success) {
 
 **Problème sans Façade:**
 ```javascript
-// Utiliser plusieurs repositories manuellement
+
 const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
@@ -233,24 +227,22 @@ const totalExpense = TransactionRepository.calculateTotalExpense(
 );
 const balance = totalIncome - totalExpense;
 const user = UserRepository.findById(userId);
-const budgetRemaining = Math.max(0, user.monthlyBudgetLimit - totalExpense);
+const budgetRemaining = Math.largest(0, user.monthlyBudgetLimit - totalExpense);
 const indicator = balance > 0 ? 'positive' : balance < 0 ? 'negative' : 'balanced';
 
-// Répétitif et complexe...
 ```
 
 **Solution avec Façade:**
 ```javascript
 class BudgetService {
-  // Une méthode simple qui gère tout
+
   static getSummary(userId) {
     const user = UserRepository.findById(userId);
-    
+
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
-    // Calculs délégués aux repositories
     const totalIncome = TransactionRepository.calculateTotalIncome(
       userId, startOfMonth, endOfMonth
     );
@@ -269,35 +261,34 @@ class BudgetService {
         balance,
         indicator,
         monthlyBudgetLimit: user.monthlyBudgetLimit,
-        budgetRemaining: Math.max(0, user.monthlyBudgetLimit - totalExpense),
+        budgetRemaining: Math.largest(0, user.monthlyBudgetLimit - totalExpense),
         isOverBudget: totalExpense > user.monthlyBudgetLimit,
       }
     };
   }
 
-  // Autres méthodes qui regroupent des opérations complexes
-  static getCategoryBreakdown(userId) { /* ... */ }
-  static getRecommendations(userId) { /* ... */ }
-  static getComprehensiveReport(userId) { /* ... */ }
+  static getCategoryBreakdown(userId) {  }
+  static getRecommendations(userId) {  }
+  static getComprehensiveReport(userId) {  }
 }
 ```
 
 **Utilisation dans le contrôleur:**
 ```javascript
-export const getSummary = (req, res) => {
-  // Une seule ligne!
+export const getSummary = (req, answer) => {
+
   const result = BudgetService.getSummary(req.user.userId);
-  res.json(result);
+  answer.json(result);
 };
 ```
 
 ### Avantages
 
-✅ **Simplification**: Interface simple pour complexité cachée  
-✅ **Réutilisabilité**: Évite la duplication de code  
-✅ **Maintenabilité**: Modification centralisée  
-✅ **Lisibilité**: Code plus clair et compréhensible  
-✅ **Flexibilité**: Changements internes sans impact externe  
+✅ **Simplification**: Interface simple pour complexité cachée
+✅ **Réutilisabilité**: Évite la duplication de code
+✅ **Maintenabilité**: Modification centralisée
+✅ **Lisibilité**: Code plus clair et compréhensible
+✅ **Flexibilité**: Changements internes sans impact externe
 
 ### Quand l'utiliser
 
@@ -310,15 +301,13 @@ export const getSummary = (req, res) => {
 ### Exemple réel dans BudgetMaster
 
 ```javascript
-// Sans Façade - Complexe
+
 const summary = await budgetAPI.getSummary();
 const breakdown = await budgetAPI.getCategoryBreakdown();
 const recommendations = await budgetAPI.getRecommendations();
-// 3 requêtes, code dupliqué...
 
-// Avec Façade - Simple
 const report = await budgetAPI.getComprehensiveReport();
-// 1 requête, tout ensemble!
+
 ```
 
 ---
@@ -346,14 +335,13 @@ Quand l'état change → notify() → Tous les observers sont informés
 #### Backend: `src/utils/observer.js`
 
 ```javascript
-// 1. Interface Observer
+
 class Observer {
   update(eventType, data) {
     throw new Error('update() doit être implémentée');
   }
 }
 
-// 2. Observable - Gère les observateurs
 class Observable {
   constructor() {
     this.observers = [];
@@ -369,7 +357,6 @@ class Observable {
     this.observers = this.observers.filter((obs) => obs !== observer);
   }
 
-  // Notifie tous les observateurs
   notify(eventType, data) {
     this.observers.forEach((observer) => {
       observer.update(eventType, data);
@@ -381,10 +368,10 @@ class Observable {
 #### Backend: `src/services/notificationService.js`
 
 ```javascript
-// Observateurs concrets
+
 class LoggingObserver extends Observer {
   update(eventType, data) {
-    logger.info(`[EVENT] ${eventType}`, data);  // Log l'événement
+    logger.info(`[EVENT] ${eventType}`, data);
   }
 }
 
@@ -393,18 +380,16 @@ class BudgetAlertObserver extends Observer {
     if (eventType === EVENT_TYPES.TRANSACTION_ADDED) {
       if (data.transaction.type === 'expense') {
         logger.warn(`[BUDGET ALERT] Dépense: ${data.transaction.amount}`);
-        // Pourrait envoyer une notification push, email, etc.
+
       }
     }
   }
 }
 
-// Service qui utilise l'Observable
 class NotificationService {
   constructor() {
     this.observable = new Observable();
-    
-    // Attacher les observateurs par défaut
+
     this.observable.attach(new LoggingObserver());
     this.observable.attach(new BudgetAlertObserver());
   }
@@ -424,11 +409,10 @@ const notificationService = new NotificationService();
 #### Utilisation dans TransactionService
 
 ```javascript
-// Quand une transaction est créée
+
 static create(userId, transactionData) {
   const transaction = TransactionRepository.create({...});
 
-  // Notifier les observateurs
   NotificationService.notify(EVENT_TYPES.TRANSACTION_ADDED, {
     transaction,
     userId,
@@ -446,7 +430,7 @@ static create(userId, transactionData) {
 #### Frontend: `src/services/Observer.js`
 
 ```javascript
-// Même pattern côté client pour les contextes React
+
 class BudgetObserver extends Observer {
   constructor(callback) {
     super();
@@ -489,11 +473,10 @@ export const BudgetProvider = ({ children }) => {
 
   const loadBudgetData = useCallback(async () => {
     const summaryRes = await budgetAPI.getSummary();
-    
+
     if (summaryRes.success) {
       setSummary(summaryRes.data.summary);
-      
-      // Notifier les observateurs
+
       budgetObservable.notify('budget.updated', summaryRes.data.summary);
     }
   }, []);
@@ -521,17 +504,16 @@ export const BudgetProvider = ({ children }) => {
 function DashboardPage() {
   const { summary, subscribe } = useBudget();
 
-  // S'abonner aux changements budgétaires
   useEffect(() => {
     const unsubscribe = subscribe((eventType, data) => {
       console.log('Budget mise à jour!', data);
-      // Mettre à jour l'interface
+
     });
 
-    return unsubscribe;  // Se désabonner au démontage
+    return unsubscribe;
   }, [subscribe]);
 
-  return <div>{/* Afficher le budget */}</div>;
+  return <div>{}</div>;
 }
 ```
 
@@ -550,11 +532,11 @@ export const EVENT_TYPES = {
 
 ### Avantages
 
-✅ **Découplage**: Observateurs indépendants du Subject  
-✅ **Extensibilité**: Ajouter des observateurs sans modifier le code existant  
-✅ **Réactivité**: Notifications automatiques et immédiates  
-✅ **Maintenabilité**: Logique centralisée d'événements  
-✅ **Testabilité**: Tester chaque observateur indépendamment  
+✅ **Découplage**: Observateurs indépendants du Subject
+✅ **Extensibilité**: Ajouter des observateurs sans modifier le code existant
+✅ **Réactivité**: Notifications automatiques et immédiates
+✅ **Maintenabilité**: Logique centralisée d'événements
+✅ **Testabilité**: Tester chaque observateur indépendamment
 
 ### Quand l'utiliser
 
@@ -606,7 +588,7 @@ Flux d'ajout de transaction:
 
 ### Singleton
 - ✅ Utiliser pour services stateless ou cache
-- ❌ Éviter pour logique métier changeante
+- ❌ Éviter pour logique largestétier changeante
 - ❌ Penser à la testabilité (reset entre tests)
 
 ### Façade
@@ -626,29 +608,27 @@ Flux d'ajout de transaction:
 ## 🧪 Testing
 
 ```javascript
-// Test Singleton
+
 test('AuthService singleton', () => {
   const instance1 = AuthService.getInstance();
   const instance2 = AuthService.getInstance();
   expect(instance1).toBe(instance2);
 });
 
-// Test Façade
 test('APIClient façade', async () => {
   const result = await apiClient.post('/login', data);
   expect(result.success).toBe(true);
-  // Token ajouté automatiquement ✅
+
 });
 
-// Test Observer
 test('Observer notification', () => {
   const observable = new Observable();
   const callback = jest.fn();
   const observer = new BudgetObserver(callback);
-  
+
   observable.attach(observer);
   observable.notify('test', { data: 'test' });
-  
+
   expect(callback).toHaveBeenCalled();
 });
 ```
@@ -657,14 +637,14 @@ test('Observer notification', () => {
 
 ## 📚 Ressources
 
-- [Refactoring Guru - Design Patterns](https://refactoring.guru/design-patterns)
-- [JavaScript Patterns](https://www.patterns.dev/)
-- [Head First Design Patterns](https://www.oreilly.com/library/view/head-first-design/0596007124/)
+- [Refactoring Guru - Design Patterns](https:
+- [JavaScript Patterns](https:
+- [Head First Design Patterns](https:
 
 ---
 
-**Équipe**: Souleymane Sow, Moses Kasindi, Ruth Kegmo  
-**Session**: H2026  
+**Équipe**: Souleymane Sow, Moses Kasindi, Ruth Kegmo
+**Session**: H2026
 **Dernière mise à jour**: 2026-02-22
 
 ---
@@ -676,13 +656,13 @@ test('Observer notification', () => {
 Sans Singleton, `loadDatabase()` faisait `fs.readFileSync()` à chaque appel.
 Pour un simple `register`, cela représentait 3 lectures disque consécutives.
 ```javascript
-// AVANT — 3 lectures disque pour un register ❌
+
 static emailExists(email) {
-  const db = loadDatabase(); // lecture disque
+  const db = loadDatabase();
   return db.users.some(u => u.email === email);
 }
 static create(userData) {
-  const db = loadDatabase(); // lecture disque encore
+  const db = loadDatabase();
   db.users.push(newUser);
   saveDatabase(db);
 }
@@ -690,13 +670,13 @@ static create(userData) {
 
 ### Solution
 ```javascript
-// APRÈS — 0 lecture disque, accès mémoire ✅
+
 class Database {
   constructor() {
     if (Database._instance) return Database._instance;
-    this._data = this._readFromDisk(); // lecture UNE SEULE FOIS
+    this._data = this._readFromDisk();
     Database._instance = this;
-    console.log('[Database] Singleton instancié — données chargées en mémoire');
+    console.log('[Database] Singleton instancié — données chargées en largestémoire');
   }
 
   static getInstance() {
@@ -723,8 +703,8 @@ export function saveDatabase(data) { Database.getInstance().setData(data); }
 
 ### Avantages
 
-✅ Performance : zéro lecture disque après démarrage
-✅ Cohérence : tous les repositories partagent le même état
+✅ Performance : remainingéro lecture disque après démarrage
+✅ Cohérence : tous les repositories partagent le largestême état
 ✅ Rétrocompatible : aucune modification dans les repositories
 ✅ Traçabilité : log au démarrage confirme l'instanciation unique
 

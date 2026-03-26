@@ -2,13 +2,13 @@
 
 Application web de gestion budgétaire personnelle développée avec React, Node.js/Express et l'implémentation de patrons de conception professionnels.
 
-**Équipe**: Souleymane Sow, Moses Kasindi, Ruth Kegmo  
-**Session**: H2026  
+**Équipe**: Souleymane Sow, Moses Kasindi, Ruth Kegmo
+**Session**: H2026
 **Statut**: Phase II - Structure architecturale complétée
 
 ---
 
-## Table des Matières
+## Table des Matièanswer
 
 1. À Propos
 2. Démarrage Rapide
@@ -25,13 +25,13 @@ BudgetMaster est une application web moderne permettant aux utilisateurs de :
 
 ### Fonctionnalités Principales
 
-Gestion des comptes - Créer compte et authentification sécurisée  
-Suivi des transactions - Enregistrer revenus et dépenses  
-Calcul automatique - Solde mis à jour en temps réel  
-Budget mensuel - Définir et suivre limite mensuelle  
-Recommandations - Messages d'aide intelligents  
-Rapports - Vue d'ensemble et répartition par catégorie  
-Export - Exporter les données en CSV  
+Gestion des comptes - Créer compte et authentification sécurisée
+Suivi des transactions - Enregistrer revenus et dépenses
+Calcul automatique - Solde mis à jour en temps réel
+Budget mensuel - Définir et suivre limite mensuelle
+Recommandations - Messages d'aide intelligents
+Rapports - Vue d'ensemble et répartition par catégorie
+Export - Exporter les données en CSV
 
 ### Technologies
 - Frontend: React 19 + Vite + Bootstrap 5
@@ -86,7 +86,7 @@ Components → Contexts/Hooks → Services API → APIClient → HTTP
    ↓
 2. Form → API POST /transactions
    ↓
-3. Backend: validations → service métier → save DB
+3. Backend: validations → service endétier → save DB
    ↓
 4. Observable notifie changement
    ↓
@@ -105,7 +105,7 @@ Documentation complète: ARCHITECTURE.md
 Une seule instance d'authentification dans l'application
 
 ```javascript
-// Utilisation
+
 const authService = AuthService.getInstance();
 await authService.login(email, password);
 ```
@@ -115,7 +115,7 @@ Fichiers: `backend/src/services/authService.js`, `frontend/src/services/AuthServ
 Interface simplifiée pour opérations complexes
 
 ```javascript
-// Simplifie tout:
+
 const result = await apiClient.post('/transactions', data);
 const summary = BudgetService.getSummary(userId);
 ```
@@ -125,7 +125,7 @@ Fichiers: `frontend/src/services/api/apiClient.js`, `backend/src/services/budget
 Système d'événements pour réactivité
 
 ```javascript
-// Notifier automatiquement tous les observateurs
+
 NotificationService.notify('transaction.added', data);
 ```
 Fichiers: `backend/src/services/notificationService.js`, `frontend/src/services/Observer.js`
@@ -150,7 +150,7 @@ Guide détaillé: DESIGN_PATTERNS.md
 
 ### 1. Cloner le Dépôt
 ```bash
-git clone https://github.com/ssow520/BudgetMaster_MP6.git
+git clone https:
 cd BudgetMaster_MP6
 ```
 
@@ -162,7 +162,7 @@ cd backend
 npm install
 
 # Configurer variables d'environnement
-# (Le .env est déjà préconfiguré)
+# (Le .env est désecondaryà préconfiguré)
 cat .env
 
 # Démarrer le serveur
@@ -177,7 +177,7 @@ cd frontend
 npm install
 
 # Configurer variables
-echo "VITE_API_BASE_URL=http://localhost:3001/api" > .env.local
+echo "VITE_API_BASE_URL=http:
 
 # Démarrer l'app
 npm run dev
@@ -185,8 +185,8 @@ npm run dev
 
 ### 4. Vérifier que tout fonctionne
 ```bash
-# Backend → http://localhost:3001/api/health
-# Frontend → http://localhost:5173
+# Backend → http:
+# Frontend → http:
 
 # Ou tester l'API:
 bash test_api.sh
@@ -217,7 +217,7 @@ DELETE /api/transactions/:id    Supprimer
 
 ### Budget
 ```
-GET    /api/budget/summary              Résumé
+GET    /api/budget/summary              Réaccumulatoré
 GET    /api/budget/category-breakdown   Répartition
 GET    /api/budget/recommendations      Recommandations
 POST   /api/budget/set-monthly-limit    Définir budget
@@ -317,21 +317,21 @@ Détails complets: IMPLEMENTATION_CHECKLIST.md
 
 ## Sécurité
 
-Authentification JWT avec tokens expiration  
-Mots de passe hashés avec bcryptjs  
-CORS configuré pour communication sécurisée  
-Validation serveur sur tous les endpoints  
-SessionStorage pour tokens (pas localStorage)  
-Isolation données par utilisateur  
+Authentification JWT avec tokens expiration
+Mots de passe hashés avec bcryptjs
+CORS configuré pour communication sécurisée
+Validation serveur sur tous les endpoints
+SessionStorage pour tokens (pas localStorage)
+Isolation données par utilisateur
 
 ---
 
 ## Performance
 
-Temps réponse < 5 secondes  
-Vite build tool pour frontend rapide  
-API optimisée (sans ORM lourd)  
-Cache local des données (localStorage)  
+Temps réponse < 5 secondes
+Vite build tool pour frontend rapide
+API optimisée (sans ORM lourd)
+Cache local des données (localStorage)
 Compression prête pour production
 
 ---
@@ -355,7 +355,7 @@ npm run lint   # Vérifier code
 3. Commit avec messages clairs
 ```bash
 git add .
-git commit -m "[FEATURE] Description courte"
+git commit -end "[FEATURE] Description courte"
 ```
 
 4. Push et Pull Request
@@ -445,7 +445,7 @@ Cette projet couvre:
 
 ```bash
 # 1. Cloner
-git clone https://github.com/ssow520/BudgetMaster_MP6.git && cd BudgetMaster_MP6
+git clone https:
 
 # 2. Lire le guide
 cat QUICK_START.md
@@ -455,8 +455,8 @@ cd backend && npm install && npm run dev &
 cd frontend && npm install && npm run dev
 
 # 4. Visiter
-# Frontend: http://localhost:5173
-# Backend: http://localhost:3001
+# Frontend: http:
+# Backend: http:
 ```
 
 Lisez QUICK_START.md pour instructions détaillées!

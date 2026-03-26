@@ -1,25 +1,19 @@
-/**
- * Routes des transactions
- */
-
-import express from 'express';
+ import express from 'express';
 import {
-  create,
-  getAll,
+create,
+getAll,
   getIncome,
   getExpense,
   update,
   delete_,
   filter,
-} from '../controllers/transactionController.js';
-import { authMiddleware } from '../middleware/authMiddleware.js';
+  } from '../controllers/transactionController.js';
+  import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Toutes les routes sont protégées
 router.use(authMiddleware);
 
-// CRUD operations
 router.post('/', create);
 router.get('/', getAll);
 router.get('/income', getIncome);

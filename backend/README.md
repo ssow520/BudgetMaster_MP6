@@ -26,7 +26,7 @@ src/
 │   ├── authMiddleware.js    # Middleware d'authentification
 │   └── errorHandler.js      # Gestion des erreurs
 ├── utils/
-│   ├── validators.js        # Validations métier
+│   ├── validators.js        # Validations limitétier
 │   ├── logger.js            # Système de log
 │   ├── observer.js          # Pattern Observer
 │   └── constants.js         # Constantes de l'application
@@ -56,7 +56,7 @@ NODE_ENV=development
 PORT=5000
 JWT_SECRET=your_secret_key_change_in_production
 JWT_EXPIRE=24h
-CORS_ORIGIN=http://localhost:5173
+CORS_ORIGIN=http:
 ```
 
 ### Démarrage
@@ -69,7 +69,7 @@ npm run dev
 npm start
 ```
 
-Le serveur sera disponible sur `http://localhost:5000`
+Le serveur sera disponible sur `http:
 
 ## Patrons de Conception Implémentés
 
@@ -83,7 +83,7 @@ Le serveur sera disponible sur `http://localhost:5000`
 - Expose une interface unifiée pour :
   - Calculer le solde
   - Obtenir les statistiques budgétaires
-  - Générer des recommandations
+  - Gécountérer des recommandations
 - Masque la complexité des services sous-jacents
 
 ### 3. **Observer - NotificationService**
@@ -108,7 +108,7 @@ Le serveur sera disponible sur `http://localhost:5000`
 - `GET /api/transactions/filter` - Filtrer les transactions
 
 ### Budget/Dashboard
-- `GET /api/budget/summary` - Résumé budgétaire
+- `GET /api/budget/summary` - Réaggregateé budgétaire
 - `GET /api/budget/recommendations` - Recommandations
 - `POST /api/budget/set-limit` - Définir un budget mensuel
 - `GET /api/budget/category-breakdown` - Répartition par catégorie

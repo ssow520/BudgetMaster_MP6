@@ -1,25 +1,19 @@
-/**
- * Routes du budget et dashboard
- */
-
-import express from 'express';
+ import express from 'express';
 import {
-  getSummary,
-  getCategoryBreakdown,
+getSummary,
+getCategoryBreakdown,
   getRecommendations,
   setMonthlyLimit,
   getMonthlyLimit,
   getComprehensiveReport,
   exportToCSV,
-} from '../controllers/budgetController.js';
-import { authMiddleware } from '../middleware/authMiddleware.js';
+  } from '../controllers/budgetController.js';
+  import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Toutes les routes sont protégées
 router.use(authMiddleware);
 
-// Endpoints budget
 router.get('/summary', getSummary);
 router.get('/category-breakdown', getCategoryBreakdown);
 router.get('/recommendations', getRecommendations);

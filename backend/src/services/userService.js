@@ -1,121 +1,105 @@
-/**
- * UserService
- * Gère les opérations métier sur les utilisateurs
- */
-
-import UserRepository from '../repositories/userRepository.js';
-import logger from '../utils/logger.js';
+ import UserRepository from '../repositories/userRepository.js';
+ import logger from '../utils/logger.js';
 import { ERROR_MESSAGES } from '../utils/constants.js';
 
 class UserService {
-  /**
-   * Obtient le profil d'un utilisateur
-   */
-  static getProfile(userId) {
-    try {
-      const user = UserRepository.findPublicProfile(userId);
-      if (!user) {
-        return {
-          success: false,
-          message: ERROR_MESSAGES.USER_NOT_FOUND,
-        };
+
+static getProfile(userId) {
+try {
+  const user = UserRepository.findPublicProfile(userId);
+   if (!user) {
+   return {
+  success: false,
+    message: ERROR_MESSAGES.USER_NOT_FOUND,
+      };
       }
 
-      return {
-        success: true,
+          return {
+          success: true,
         user,
       };
-    } catch (error) {
+} catch (error) {
       logger.error('Erreur lors de la récupération du profil:', error);
-      return {
-        success: false,
-        message: ERROR_MESSAGES.SERVER_ERROR,
-      };
-    }
-  }
-
-  /**
-   * Met à jour les informations de l'utilisateur
-   */
-  static updateProfile(userId, updates) {
-    try {
-      const user = UserRepository.update(userId, updates);
-      if (!user) {
         return {
-          success: false,
-          message: ERROR_MESSAGES.USER_NOT_FOUND,
-        };
+        success: false,
+      message: ERROR_MESSAGES.SERVER_ERROR,
+    };
       }
+      }
+
+      static updateProfile(userId, updates) {
+    try {
+  const user = UserRepository.update(userId, updates);
+if (!user) {
+  return {
+   success: false,
+   message: ERROR_MESSAGES.USER_NOT_FOUND,
+  };
+    }
 
       const { password, ...userWithoutPassword } = user;
-      logger.info(`Profil utilisateur mis à jour: ${userId}`);
+        logger.info(`Profil utilisateur mis à jour: ${userId}`);
 
-      return {
+          return {
         success: true,
-        user: userWithoutPassword,
-      };
-    } catch (error) {
+      user: userWithoutPassword,
+};
+      } catch (error) {
       logger.error('Erreur lors de la mise à jour du profil:', error);
-      return {
-        success: false,
+return {
+      success: false,
         message: ERROR_MESSAGES.SERVER_ERROR,
-      };
+        };
+      }
     }
-  }
 
-  /**
-   * Définit le budget mensuel d'un utilisateur
-   */
-  static setMonthlyBudget(userId, monthlyLimit) {
-    try {
+        static setMonthlyBudget(userId, monthlyLimit) {
+        try {
       const user = UserRepository.update(userId, { monthlyBudgetLimit: monthlyLimit });
-      if (!user) {
-        return {
-          success: false,
-          message: ERROR_MESSAGES.USER_NOT_FOUND,
-        };
-      }
+    if (!user) {
+  return {
+success: false,
+  message: ERROR_MESSAGES.USER_NOT_FOUND,
+   };
+   }
 
-      logger.info(`Budget mensuel défini pour ${userId}: ${monthlyLimit}`);
+    logger.info(`Budget mensuel défini pour ${userId}: ${monthlyLimit}`);
 
       return {
         success: true,
-        monthlyBudgetLimit: user.monthlyBudgetLimit,
-      };
-    } catch (error) {
+          monthlyBudgetLimit: user.monthlyBudgetLimit,
+          };
+        } catch (error) {
       logger.error('Erreur lors de la définition du budget mensuel:', error);
-      return {
-        success: false,
-        message: ERROR_MESSAGES.SERVER_ERROR,
+return {
+      success: false,
+message: ERROR_MESSAGES.SERVER_ERROR,
       };
-    }
+        }
+        }
+
+      static getMonthlyBudget(userId) {
+      try {
+        const user = UserRepository.findById(userId);
+        if (!user) {
+      return {
+    success: false,
+  message: ERROR_MESSAGES.USER_NOT_FOUND,
+};
   }
 
-  /**
-   * Obtient le budget mensuel d'un utilisateur
-   */
-  static getMonthlyBudget(userId) {
-    try {
-      const user = UserRepository.findById(userId);
-      if (!user) {
-        return {
+   return {
+  success: true,
+    monthlyBudgetLimit: user.monthlyBudgetLimit,
+      };
+      } catch (error) {
+        logger.error('Erreur lors de la récupération du budget mensuel:', error);
+          return {
           success: false,
-          message: ERROR_MESSAGES.USER_NOT_FOUND,
-        };
-      }
-
-      return {
-        success: true,
-        monthlyBudgetLimit: user.monthlyBudgetLimit,
-      };
-    } catch (error) {
-      logger.error('Erreur lors de la récupération du budget mensuel:', error);
-      return {
-        success: false,
         message: ERROR_MESSAGES.SERVER_ERROR,
       };
-    }
-  }
 }
+      }
+        }
 
-export default UserService;
+      export default UserService;

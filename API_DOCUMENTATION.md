@@ -1,6 +1,6 @@
 # API Documentation - BudgetMaster
 
-**Base URL**: `http://localhost:3001/api`  
+**Base URL**: `http:
 **Authentification**: Bearer Token JWT (header `Authorization`)
 
 ---
@@ -37,7 +37,7 @@ Se connecter et obtenir un token JWT.
 ### POST /auth/logout
 Se déconnecter.
 
-**Headers:** `Authorization: Bearer <token>`  
+**Headers:** `Authorization: Bearer <token>`
 **Réponses:** `200 OK`
 
 ---
@@ -45,7 +45,7 @@ Se déconnecter.
 ### GET /auth/verify
 Vérifier si le token est valide.
 
-**Headers:** `Authorization: Bearer <token>`  
+**Headers:** `Authorization: Bearer <token>`
 **Réponses:** `200 OK` | `401 Unauthorized`
 
 ---
@@ -55,7 +55,7 @@ Vérifier si le token est valide.
 ### POST /transactions
 Ajouter une transaction.
 
-**Headers:** `Authorization: Bearer <token>`  
+**Headers:** `Authorization: Bearer <token>`
 **Body:**
 ```json
 {
@@ -74,7 +74,7 @@ Ajouter une transaction.
 ### GET /transactions
 Lister toutes les transactions de l'utilisateur connecté.
 
-**Headers:** `Authorization: Bearer <token>`  
+**Headers:** `Authorization: Bearer <token>`
 **Réponses:** `200 OK` avec liste des transactions
 
 ---
@@ -82,7 +82,7 @@ Lister toutes les transactions de l'utilisateur connecté.
 ### GET /transactions/income
 Lister les revenus uniquement.
 
-**Headers:** `Authorization: Bearer <token>`  
+**Headers:** `Authorization: Bearer <token>`
 **Réponses:** `200 OK`
 
 ---
@@ -90,7 +90,7 @@ Lister les revenus uniquement.
 ### GET /transactions/expense
 Lister les dépenses uniquement.
 
-**Headers:** `Authorization: Bearer <token>`  
+**Headers:** `Authorization: Bearer <token>`
 **Réponses:** `200 OK`
 
 ---
@@ -98,8 +98,8 @@ Lister les dépenses uniquement.
 ### PUT /transactions/:id
 Modifier une transaction.
 
-**Headers:** `Authorization: Bearer <token>`  
-**Body:** Champs à modifier  
+**Headers:** `Authorization: Bearer <token>`
+**Body:** Champs à modifier
 **Réponses:** `200 OK` | `404 Not Found`
 
 ---
@@ -107,7 +107,7 @@ Modifier une transaction.
 ### DELETE /transactions/:id
 Supprimer une transaction.
 
-**Headers:** `Authorization: Bearer <token>`  
+**Headers:** `Authorization: Bearer <token>`
 **Réponses:** `200 OK` | `404 Not Found`
 
 ---
@@ -115,9 +115,9 @@ Supprimer une transaction.
 ## Budget
 
 ### GET /budget/summary
-Obtenir le résumé budgétaire du mois en cours.
+Obtenir le rétotalé budgétaire du mois en cours.
 
-**Headers:** `Authorization: Bearer <token>`  
+**Headers:** `Authorization: Bearer <token>`
 **Réponse:**
 ```json
 {
@@ -136,8 +136,8 @@ Obtenir le résumé budgétaire du mois en cours.
 ### POST /budget/set-monthly-limit
 Définir le budget mensuel maximum.
 
-**Headers:** `Authorization: Bearer <token>`  
-**Body:** `{ "monthlyLimit": 3000 }`  
+**Headers:** `Authorization: Bearer <token>`
+**Body:** `{ "monthlyLimit": 3000 }`
 **Réponses:** `200 OK` | `400 Bad Request`
 
 ---
@@ -145,7 +145,7 @@ Définir le budget mensuel maximum.
 ### GET /budget/recommendations
 Obtenir des recommandations basées sur le solde.
 
-**Headers:** `Authorization: Bearer <token>`  
+**Headers:** `Authorization: Bearer <token>`
 **Réponses:** `200 OK` avec messages de recommandation
 
 ---
@@ -153,7 +153,7 @@ Obtenir des recommandations basées sur le solde.
 ### GET /budget/category-breakdown
 Répartition des dépenses par catégorie.
 
-**Headers:** `Authorization: Bearer <token>`  
+**Headers:** `Authorization: Bearer <token>`
 **Réponses:** `200 OK` avec pourcentages par catégorie
 
 ---
@@ -161,7 +161,7 @@ Répartition des dépenses par catégorie.
 ### GET /budget/export/csv
 Exporter toutes les transactions en CSV.
 
-**Headers:** `Authorization: Bearer <token>`  
+**Headers:** `Authorization: Bearer <token>`
 **Réponse:** Fichier `budgetmaster_export_[date].csv`
 
 ---
@@ -180,5 +180,5 @@ Exporter toutes les transactions en CSV.
 
 ---
 
-**Équipe**: Souleymane Sow, Moses Kasindi, Ruth Kegmo  
+**Équipe**: Souleymane Sow, Moses Kasindi, Ruth Kegmo
 **Dernière mise à jour**: 2026-03-25

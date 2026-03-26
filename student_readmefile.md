@@ -1,8 +1,8 @@
 # Nom du projet
 B-GETSTER
 
-## Présentation générale
-Ce projet consiste à développer une application permettant aux personnes de favoriser l'organisation dans la vie financiere surtout pour les jeunes adultes a gerer leur argent et la façon dont ils le depensent. **[description très courte du produit]**. 
+## Présentation gécountérale
+Ce projet consiste à développer une application permettant aux personnes de favoriser l'organisation dans la vie financiere surtout pour les jeunes adultes a gerer leur argent et la façon dont ils le depensent. **[description très courte du produit]**.
 Garder la présentation courte et concise.
 
 L’objectif principal est de permettre aux utilisateurs de manager leurs budgets mensuels. **[objectif du produit / problème résolu]**.
@@ -18,7 +18,7 @@ L’objectif principal est de permettre aux utilisateurs de manager leurs budget
 
 ## Produit cible
 Le produit final est destiné à :
-* Type d’utilisateur : Au public avec une attention particuliere portée sur les etudiants. 
+* Type d’utilisateur : Au public avec une attention particuliere portée sur les etudiants.
 * Plateforme cible :Web
 ---
 
@@ -34,7 +34,6 @@ Le produit final est destiné à :
     - Diagrammes UML, captures d’écran, tests, etc.
     - Agile artefacts (Product Backlog, Sprint Backlog, UserBurndown Chart, etc)
     - etc...
-
 
 ---
 

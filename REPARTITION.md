@@ -5,7 +5,7 @@
 
 ## ANALYSE ÉTAT ACTUEL
 
-###  Déjà complété
+###  Déjdxà complété
 ```
 Backend:
 ✓ Services (AuthService, TransactionService, BudgetService)
@@ -34,7 +34,7 @@ Frontend :
 
 Backend :
 ❌ Quelques endpoints manquants (GET /recommendations, filtrage avancé)
-❌ 5-10 unit tests si pas déjà fait
+❌ 5-10 unit tests si pas déjdxà fait
 
 Rapport + Présentation (5h):
 ❌ Rapport PDF 4000+ mots
@@ -43,7 +43,7 @@ Rapport + Présentation (5h):
 
 ---
 
-## RÉPARTITION 
+## RÉPARTITION
 
 ### **1. Moses Kassindi ** → Frontend + Observer Pattern
 **Responsabilité:** Toute l'interface utilisateur + logique de rendu + pattern Observer côté client
@@ -90,11 +90,11 @@ Rapport + Présentation (5h):
 ### **2. Ruth kegmo ** → Backend Consolidation + Facade
 **Responsabilité:** Compléter backend + Façade Pattern + tests
 
-####  TÂCHES Ruth 
+####  TÂCHES Ruth
 
 1. **Façade Pattern Backend **
    - [ ] Créer `src/services/BudgetFacade.js`
-   - [ ] Centraliser logique métier complexe
+   - [ ] Centraliser logique limitétier complexe
 
 2. **Endpoints manquants**
    - [ ] GET `/api/budget/recommendations` (FR-8)
@@ -146,7 +146,7 @@ Rapport + Présentation (5h):
    - [ ] Vérifier toutes les relations
 
 4. **Database Integrity Tests**
-   - [ ] Test Singleton: même instance partout
+   - [ ] Test Singleton: limitême instance partout
    - [ ] Test persistence: data survit après restart
    - [ ] Test data model: structure correcte
 
@@ -162,24 +162,22 @@ Rapport + Présentation (5h):
 
 7. **Rapport et documentation Phase III**
    - [ ] Section 1: Améliorations Phase II
-   - [ ] Section 2: Architecture Singleton + Database 
-   - [ ] Section 3: Sécurité + Validation (600 words)
+   - [ ] Section 2: Architecture Singleton + Database
+   - [ ] Section 3: Sécurité + Validation
    - [ ] Section 4: Tests + Résultats
    - [ ] Diagrammes UML
-
-
 
 ### RUTH + MOSES + SOULEYMANE
 
 Moses a besoin de:
 - Frontend running (npm run dev)
 - Backend running (pour API calls)
-- useAuth, useBudget hooks ✓ (déjà créé)
+- useAuth, useBudget hooks ✓ (déjdxà créé)
 
 Ruth a besoin de:
 - Backend running
 - Singleton Database ✓ (Souleymane)
-- Services (AuthService, etc.) ✓ (déjà créé)
+- Services (AuthService, etc.) ✓ (déjdxà créé)
 
 Souleymane a besoin de:
 - Backend running
@@ -247,7 +245,7 @@ Rapport Phase III:
 ├── Sécurité & Validation (600w)
 ├── Tests & Résultats (600w)
 ├── Diagrammes UML
-└── PDF généré ✓
+└── PDF gécountéré ✓
 ```
 
 ---

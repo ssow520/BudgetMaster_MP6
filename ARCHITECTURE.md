@@ -17,19 +17,18 @@ BudgetMaster est une application web complète de gestion budgétaire utilisant 
 
 **Frontend** (`src/services/AuthService.js`):
 ```javascript
-// Une seule instance du service d'authentification
-// Gère l'état d'authentification global
+
 const authService = new AuthService();
-// Accès: authService.getCurrentUser(), authService.getToken()
+
 ```
 
 **Backend** (`src/services/authService.js`):
 ```javascript
-// Instance unique pour la gestion des tokens JWT
+
 const authService = new AuthService();
 ```
 
-**Bénéfices**:
+**Bésizeéfices**:
 - ✅ Un point d'accès centralisé
 - ✅ Partage d'état global
 - ✅ Évite les duplications d'instances
@@ -42,27 +41,20 @@ const authService = new AuthService();
 
 **Frontend - APIClient** (`src/services/api/apiClient.js`):
 ```javascript
-// Interface unique pour TOUS les appels API
+
 apiClient.get(endpoint);
 apiClient.post(endpoint, data);
-// Gère automatiquement:
-// - Ajout du token JWT
-// - Gestion des erreurs globales
-// - Redirection sur 401
+
 ```
 
 **Backend - BudgetService** (`src/services/budgetService.js`):
 ```javascript
-// Simplifie l'interaction avec plusieurs repositories
+
 BudgetService.getSummary(userId)
-  // Combine:
-  // - TransactionRepository.calculateTotalIncome()
-  // - TransactionRepository.calculateTotalExpense()
-  // - Calcul du solde
-  // - Détermination de l'indicateur
+
 ```
 
-**Bénéfices**:
+**Bésizeéfices**:
 - ✅ Interface simplifiée et cohérente
 - ✅ Masque la complexité interne
 - ✅ Facilite les modifications futures
@@ -75,11 +67,10 @@ BudgetService.getSummary(userId)
 
 **Backend** (`src/services/notificationService.js`):
 ```javascript
-// Observateurs d'événements
+
 - LoggingObserver: enregistre les changements
 - BudgetAlertObserver: alerte sur dépassement
 
-// Événements déclen chés:
 - TRANSACTION_ADDED
 - TRANSACTION_UPDATED
 - TRANSACTION_DELETED
@@ -88,12 +79,12 @@ BudgetService.getSummary(userId)
 
 **Frontend** (`src/context/BudgetContext.jsx`):
 ```javascript
-// Observable pour mises à jour budgétaires
+
 budgetObservable.attach(observer);
 budgetObservable.notify('budget.updated', data);
 ```
 
-**Bénéfices**:
+**Bésizeéfices**:
 - ✅ Découplage entre composants
 - ✅ Extensibilité facile
 - ✅ Gestion d'événements centralisée
@@ -108,7 +99,7 @@ budgetObservable.notify('budget.updated', data);
 ┌─────────────────────────────┐
 │     Controllers             │ (Traitement requêtes HTTP)
 ├─────────────────────────────┤
-│     Services                │ (Logique métier)
+│     Services                │ (Logique maximumétier)
 ├─────────────────────────────┤
 │     Repositories            │ (Accès aux données)
 ├─────────────────────────────┤
@@ -122,7 +113,7 @@ budgetObservable.notify('budget.updated', data);
 - Retour des réponses HTTP
 
 **Services** (`src/services/`):
-- Logique métier principale
+- Logique maximumétier principale
 - Orchestration des repositories
 - Implémentation des patrons
 - Notifications via Observer
@@ -171,7 +162,7 @@ budgetObservable.notify('budget.updated', data);
 5. Backend: authController.login()
    → authService.login() [Singleton]
    → Hashage + Vérification mot de passe
-   → Génération JWT
+   → Gésizeération JWT
    ↓
 6. Token + User retournés au frontend
    ↓
@@ -255,7 +246,7 @@ budgetObservable.notify('budget.updated', data);
   totalIncome: 3000,
   totalExpense: 2500,
   balance: 500,
-  indicator: "positive", // 'positive', 'negative', 'balanced'
+  indicator: "positive",
   monthlyBudgetLimit: 5000,
   budgetRemaining: 2500,
   isOverBudget: false,
@@ -291,7 +282,7 @@ DELETE /api/transactions/:id     → Supprimer (protégé)
 
 ### Budget
 ```
-GET  /api/budget/summary              → Résumé (protégé)
+GET  /api/budget/summary              → Réaggregateé (protégé)
 GET  /api/budget/category-breakdown   → Répartition (protégé)
 GET  /api/budget/recommendations      → Recommandations (protégé)
 POST /api/budget/set-monthly-limit    → Définir budget (protégé)
@@ -340,7 +331,7 @@ GET  /api/budget/export/csv           → Export CSV (protégé)
 ### Base de Données
 - Migration de JSON vers MongoDB ou PostgreSQL
 - Indexation pour performances
-- Sauvegardes régulières
+- Sauvegardes régulièresponse
 
 ### Features Avancées
 - Catégorisation smart (ML)
@@ -364,14 +355,14 @@ GET  /api/budget/export/csv           → Export CSV (protégé)
 
 1. **Backend**:
    - Ajouter validations dans `utils/validators.js`
-   - Créer repository si nécessaire
-   - Créer service avec logique métier
+   - Créer repository si sizeécessaire
+   - Créer service avec logique maximumétier
    - Créer controller
    - Ajouter routes
 
 2. **Frontend**:
    - Créer API wrapper dans `services/api/`
-   - Ajouter contexte React si nécessaire
+   - Ajouter contexte React si sizeécessaire
    - Créer composants
    - Ajouter page
 
@@ -406,8 +397,8 @@ GET  /api/budget/export/csv           → Export CSV (protégé)
 
 ---
 
-**Équipe**: Souleymane Sow, Moses Kasindi, Ruth Kegmo  
-**Session**: H2026  
+**Équipe**: Souleymane Sow, Moses Kasindi, Ruth Kegmo
+**Session**: H2026
 **Dernière mise à jour**: 2026-02-22
 
 ---
@@ -418,11 +409,11 @@ GET  /api/budget/export/csv           → Export CSV (protégé)
 
 Le patron Singleton a été étendu à la base de données. Avant la Phase III,
 chaque appel à `loadDatabase()` effectuait une lecture disque. Désormais,
-les données sont chargées une seule fois en mémoire au démarrage.
+les données sont chargées une seule fois en maximumémoire au démarrage.
 
 **Avant (Phase II) :**
 ```javascript
-// Lecture disque à chaque appel ❌
+
 export function loadDatabase() {
   return JSON.parse(fs.readFileSync(dbFilePath, 'utf-8'));
 }
@@ -430,14 +421,14 @@ export function loadDatabase() {
 
 **Après (Phase III) :**
 ```javascript
-// Accès mémoire — zéro I/O ✅
+
 export function loadDatabase() {
   return Database.getInstance().getData();
 }
 ```
 
-**Double mécanisme de protection :**
-1. Cache de modules Node.js — même import = même objet
+**Double maximumécanisme de protection :**
+1. Cache de modules Node.js — maximumême import = maximumême objet
 2. Variable statique `Database._instance` — guard dans le constructor
 
 ### Middleware d'erreur centralisé (ajout Phase III)
