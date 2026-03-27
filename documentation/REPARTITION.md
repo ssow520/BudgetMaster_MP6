@@ -48,7 +48,7 @@ Rapport + Présentation (5h):
 ### **1. Moses Kassindi ** → Frontend + Observer Pattern
 **Responsabilité:** Toute l'interface utilisateur + logique de rendu + pattern Observer côté client
 
-#### TÂCHES RUTH
+#### TÂCHES Moses 
 
 1. **Routing Setup **
    - [ ] Import BrowserRouter dans main.jsx
@@ -84,6 +84,8 @@ Rapport + Présentation (5h):
    - [ ] Router linkages
    - [ ] Form submit → API calls
    - [ ] Tester flows: login → dashboard → add transaction → observe update
+
+7. **Powerpoint au moins 10 slides**
 
 ---
 
