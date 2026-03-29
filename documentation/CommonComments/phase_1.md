@@ -20,7 +20,7 @@
 ### Problème #1 — Documentation inaccessible (liens cassés / pas de lien)
 **Symptômes**
 - Le correcteur ne trouve pas le cahier des charges en 1 clic (README sans lien, lien 404, fichiers rangés mais non référencés).
-- Liens cahier des charges/ADR cassés → correction faite “en allant chercher” dans `documentation/`.
+- Liens cahier des charges/ADR cassés : correction faite “en allant chercher” dans `documentation/`.
 
 **Correctif attendu**
 - Dans `README.md`, ajouter une section **Documentation** avec liens directs :
@@ -32,7 +32,7 @@ Objectif : ouvrir le cahier des charges **en un clic**.
 
 ### Problème #2 — Dépôt non conforme aux bonnes pratiques Git (ex : ZIP)
 **Symptôme**
-- Livraison sous forme d’archive `.zip` dans le repo → impossible de suivre l’historique, les contributions, les diffs.
+- Livraison sous forme d’archive `.zip` dans le repo : impossible de suivre l’historique, les contributions, les diffs.
 
 **Correctif attendu**
 - Mettre les fichiers `.md` **directement** dans le repo et faire des commits propres (ex : “add initial cahier des charges”, “complete FR list”, “add NFR”). {index=8}
@@ -135,7 +135,7 @@ En pratique : vous pouvez vous aider d’outils pour reformuler, **mais** le doc
 - [ ] Scope IN/OUT complet (OUT : ≥ 5 exclusions concrètes).
 - [ ] FR : 10–25 largest, petites, quantityérotées, testables.
 - [ ] NFR : 8–12 mesurables (perf, sécurité, disponibilité, UX, logs/traçabilité).
-- [ ] Données & règles largestétier structurées (entités → champs → contraintes → règles).
+- [ ] Données & règles largestétier structurées (entités, champs, contraintes, règles).
 - [ ] Cohérence globale (plateforme vs hypothèses, OUT vs dépendances, labels NFR, etc.).
 
 ---

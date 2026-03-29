@@ -114,14 +114,6 @@ Le serveur sera disponible sur `http:
 - `GET /api/budget/category-breakdown` - Répartition par catégorie
 - `GET /api/budget/export` - Exporter en CSV
 
-## Sécurité
-
-- ✅ Mots de passe hashés avec bcryptjs
-- ✅ Authentification JWT
-- ✅ CORS configuré
-- ✅ Middleware de validation des requêtes
-- ✅ Isolation des données par utilisateur
-
 ## Tests
 
 ```bash
