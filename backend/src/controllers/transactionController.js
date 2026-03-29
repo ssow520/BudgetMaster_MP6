@@ -7,10 +7,27 @@ const facade = BudgetFacade.getInstance();
 
 export const create = async (req, res) => {
   try {
+    // MODIF : logs temporaires pour voir ce que le backend reçoit
+    console.log('USER =', req.user);
+    console.log('BODY =', req.body);
+
     const result = await facade.addTransactionWithNotifications(
-      req.user.userId,
-      req.body
+        req.user.userId,
+        req.body
     );
+
+    // MODIF : log temporaire pour voir le vrai résultat retourné
+    console.log('RESULT CREATE =', result);
+
+    // MODIF : si la façade dit que ça a échoué, on renvoie une vraie erreur
+    // avant tu renvoyais toujours 201, même quand la création échouait
+    if (!result?.success) {
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({
+        success: false,
+        message: result?.message || 'Erreur lors de la création de la transaction'
+      });
+    }
+
     return res.status(HTTP_STATUS.CREATED).json({
       success: true,
       data: result,
@@ -27,11 +44,14 @@ export const create = async (req, res) => {
 
 export const getAll = (req, res) => {
   try {
-    const result = TransactionService.getInstance().getAll(req.user.userId);
+    // MODIF : appel direct à la méthode statique
+    // avant : TransactionService.getInstance().getAll(...)
+    const result = TransactionService.getAll(req.user.userId);
+
     return res.status(HTTP_STATUS.OK).json({
       success: true,
       data: result,
-      count: result.length,
+      count: result.count ?? 0,
       message: 'Transactions obtenues'
     });
   } catch (error) {
@@ -45,11 +65,13 @@ export const getAll = (req, res) => {
 
 export const getIncome = (req, res) => {
   try {
-    const result = TransactionService.getInstance().getIncome(req.user.userId);
+    // MODIF : appel direct à la méthode statique
+    const result = TransactionService.getIncome(req.user.userId);
+
     return res.status(HTTP_STATUS.OK).json({
       success: true,
       data: result,
-      count: result.length,
+      count: result.count ?? 0,
       message: 'Revenus obtenus'
     });
   } catch (error) {
@@ -63,11 +85,13 @@ export const getIncome = (req, res) => {
 
 export const getExpense = (req, res) => {
   try {
-    const result = TransactionService.getInstance().getExpense(req.user.userId);
+    // MODIF : appel direct à la méthode statique
+    const result = TransactionService.getExpense(req.user.userId);
+
     return res.status(HTTP_STATUS.OK).json({
       success: true,
       data: result,
-      count: result.length,
+      count: result.count ?? 0,
       message: 'Dépenses obtenues'
     });
   } catch (error) {
@@ -83,10 +107,19 @@ export const update = async (req, res) => {
   try {
     const { id } = req.params;
     const result = await facade.updateTransactionWithNotifications(
-      req.user.userId,
-      id,
-      req.body
+        req.user.userId,
+        id,
+        req.body
     );
+
+    // MODIF : même logique de sécurité que pour create
+    if (!result?.success) {
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({
+        success: false,
+        message: result?.message || 'Erreur lors de la mise à jour de la transaction'
+      });
+    }
+
     return res.status(HTTP_STATUS.OK).json({
       success: true,
       data: result,
@@ -105,9 +138,18 @@ export const delete_ = async (req, res) => {
   try {
     const { id } = req.params;
     const result = await facade.deleteTransactionWithNotifications(
-      req.user.userId,
-      id
+        req.user.userId,
+        id
     );
+
+    // MODIF : même logique de sécurité que pour create
+    if (!result?.success) {
+      return res.status(HTTP_STATUS.BAD_REQUEST).json({
+        success: false,
+        message: result?.message || 'Erreur lors de la suppression de la transaction'
+      });
+    }
+
     return res.status(HTTP_STATUS.OK).json({
       success: true,
       data: result,
@@ -125,6 +167,7 @@ export const delete_ = async (req, res) => {
 export const filter = async (req, res) => {
   try {
     const result = await facade.getFilteredTransactions(req.user.userId, req.query);
+
     return res.status(HTTP_STATUS.OK).json({
       success: true,
       data: result,
