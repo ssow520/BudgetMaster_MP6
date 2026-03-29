@@ -20,7 +20,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -29,7 +28,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/api/health', (req, ) => {
+app.get('/api/health', (req, res) => {
   res.status(200).json({
     success: true,
     message: 'Server is running',
@@ -42,15 +41,12 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api/budget', budgetRoutes);
 
 app.use(notFoundHandler);
-
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  logger.info(`╔════════════════════════════════════════════╗`);
-  logger.info(`║  BudgetMaster Backend - H2026           ║`);
-  logger.info(`║  Server running on http://localhost:${PORT} ║`);
-  logger.info(`║  Environment: ${process.env.NODE_ENV}${' '.repeat(17 - process.env.NODE_ENV.length)}║`);
-  logger.info(`╚════════════════════════════════════════════╝`);
+  logger.info(`BudgetMaster Backend - H2026`);
+  logger.info(`Server running on http://localhost:${PORT}`);
+  logger.info(`Environment: ${process.env.NODE_ENV}`);
 });
 
 export default app;

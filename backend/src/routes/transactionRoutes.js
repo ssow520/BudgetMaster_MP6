@@ -1,14 +1,6 @@
- import express from 'express';
-import {
-create,
-getAll,
-  getIncome,
-  getExpense,
-  update,
-  delete_,
-  filter,
-  } from '../controllers/transactionController.js';
-  import { authMiddleware } from '../middleware/authMiddleware.js';
+import express from 'express';
+import { create, getAll, getIncome, getExpense, update, delete_, filter } from '../controllers/transactionController.js';
+import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 

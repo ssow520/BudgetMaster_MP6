@@ -1,8 +1,3 @@
-/**
- * AuthController
- * Traite les requêtes liées à l'authentification
- */
-
 import authService from '../services/authService.js';
 import { HTTP_STATUS } from '../utils/constants.js';
 
