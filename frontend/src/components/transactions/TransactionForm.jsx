@@ -11,9 +11,10 @@ const TransactionForm = ({ onSubmit }) => {
 
         const transaction = {
             type,
-            amount,
+            amount: parseFloat(amount),
             category,
             description,
+            date: new Date().toISOString(),
         }
 
         onSubmit(transaction)
