@@ -1,393 +1,166 @@
-# Architecture Détaillée - BudgetMaster
+# Architecture — BudgetMaster
 
 ## Vue d'ensemble
 
-BudgetMaster est une application web complète de gestion budgétaire utilisant une architecture moderne :
+BudgetMaster est une application web de gestion budgétaire en architecture client-serveur :
 
-- **Frontend**: React + Vite
-- **Backend**: Node.js + Express
-- **Base de données**: JSON (phase 1), migration vers MongoDB/PostgreSQL prévue
-- **Authentification**: JWT (JSON Web Tokens)
-
-## Patrons de Conception Implémentés
-
-### 1. **SINGLETON (Mono-instance)**
-
-#### Utilisation: AuthService
-
-**Frontend** (`src/services/AuthService.js`):
-```javascript
-
-const authService = new AuthService();
-
-```
-
-**Backend** (`src/services/authService.js`):
-```javascript
-
-const authService = new AuthService();
-```
-
-**Bésizeéfices**:
-- ✅ Un point d'accès centralisé
-- ✅ Partage d'état global
-- ✅ Évite les duplications d'instances
+- **Frontend** : React + Vite (port 5173)
+- **Backend** : Node.js + Express (port 3001)
+- **Stockage** : fichier JSON local (`backend/data/database.json`)
+- **Authentification** : JWT (JSON Web Tokens)
 
 ---
 
-### 2. **FAÇADE (Simplification)**
+## Patrons de conception implémentés
 
-#### Utilisation: APIClient et BudgetService
+### Singleton
 
-**Frontend - APIClient** (`src/services/api/apiClient.js`):
-```javascript
+Appliqué à : `Database`, `AuthService`, `BudgetService`, `TransactionService`, `UserService`, `NotificationService`, `BudgetFacade`.
 
-apiClient.get(endpoint);
-apiClient.post(endpoint, data);
+Chaque classe expose une méthode statique `getInstance()` et un guard dans le constructeur qui retourne l'instance existante si elle est déjà créée. Le résultat : peu importe combien de fois on appelle `new AuthService()`, on obtient toujours le même objet.
 
-```
+Pour `Database` en particulier, ça garantit que toutes les lectures et écritures passent par le même objet en mémoire — pas de désynchronisation possible entre modules.
 
-**Backend - BudgetService** (`src/services/budgetService.js`):
-```javascript
+### Façade
 
-BudgetService.getSummary(userId)
+`BudgetFacade` est le point d'entrée unique pour toutes les opérations complexes du backend. Au lieu que les contrôleurs appellent `TransactionService`, `BudgetService` et `NotificationService` séparément, ils passent tous par la façade. Ça garantit que la notification est toujours envoyée après chaque opération, sans que chaque contrôleur ait à s'en souvenir.
 
-```
+`ApiClient` côté frontend joue un rôle similaire : il centralise toutes les requêtes HTTP, gère le header `Authorization`, et expose une interface simple (`get`, `post`, `put`, `delete`).
 
-**Bésizeéfices**:
-- ✅ Interface simplifiée et cohérente
-- ✅ Masque la complexité interne
-- ✅ Facilite les modifications futures
+### Observer
+
+`NotificationService` maintient une liste d'observateurs. Quand un événement survient (`transaction.added`, `budget_exceeded`, etc.), il appelle `notify()` qui déclenche `update()` sur chaque observateur enregistré.
+
+Deux observateurs concrets : `LoggingObserver` (enregistre dans les logs) et `BudgetAlertObserver` (déclenche une alerte si le budget est dépassé). Tous deux héritent de la classe abstraite `Observer` — c'est du polymorphisme en action.
 
 ---
 
-### 3. **OBSERVER (Réactivité aux changements)**
+## Architecture en couches — Backend
 
-#### Utilisation: NotificationService et BudgetContext
+Le backend est divisé en 4 couches verticales :
 
-**Backend** (`src/services/notificationService.js`):
-```javascript
+**Controllers** (`src/controllers/`) — reçoivent les requêtes HTTP, valident les données d'entrée, appellent les services, retournent les réponses. Ils ne contiennent pas de logique métier.
 
-- LoggingObserver: enregistre les changements
-- BudgetAlertObserver: alerte sur dépassement
+**Services** (`src/services/`) — contiennent toute la logique métier. C'est ici qu'on orchestre les repositories, qu'on applique les patrons de conception, et qu'on envoie les notifications.
 
-- TRANSACTION_ADDED
-- TRANSACTION_UPDATED
-- TRANSACTION_DELETED
-- BUDGET_EXCEEDED
-```
+**Repositories** (`src/repositories/`) — accès direct aux données. Toutes les opérations CRUD passent par eux. Ils ne connaissent pas les services.
 
-**Frontend** (`src/context/BudgetContext.jsx`):
-```javascript
+**Database** (`src/config/database.js`) — Singleton qui charge le fichier JSON une seule fois en mémoire au démarrage et expose `loadDatabase()` / `saveDatabase()`.
 
-budgetObservable.attach(observer);
-budgetObservable.notify('budget.updated', data);
-```
-
-**Bésizeéfices**:
-- ✅ Découplage entre composants
-- ✅ Extensibilité facile
-- ✅ Gestion d'événements centralisée
+**Middleware** (`src/middleware/`) — `authMiddleware.js` vérifie le token JWT sur les routes protégées. `errorHandler.js` intercepte toutes les erreurs et retourne une réponse formatée.
 
 ---
 
-## Architecture Couches
+## Architecture en couches — Frontend
 
-### Backend - 3 Couches
+**Pages** (`src/pages/`) — composants de haut niveau associés à une route. Ils orchestrent les composants enfants et appellent les services.
 
-```
-┌─────────────────────────────┐
-│     Controllers             │ (Traitement requêtes HTTP)
-├─────────────────────────────┤
-│     Services                │ (Logique maximumétier)
-├─────────────────────────────┤
-│     Repositories            │ (Accès aux données)
-├─────────────────────────────┤
-│     Database                │ (JSON/MongoDB)
-└─────────────────────────────┘
-```
+**Composants** (`src/components/`) — composants réutilisables (`Navbar`, `TransactionForm`, `SummaryComponent`, etc.).
 
-**Controllers** (`src/controllers/`):
-- Réception/validation des requêtes
-- Appel des services
-- Retour des réponses HTTP
+**Contexts** (`src/context/`) — `AuthContext` gère la session utilisateur (token JWT, données user, expiration 30 min). `BudgetContext` gère l'état du budget partagé entre composants.
 
-**Services** (`src/services/`):
-- Logique maximumétier principale
-- Orchestration des repositories
-- Implémentation des patrons
-- Notifications via Observer
-
-**Repositories** (`src/repositories/`):
-- Accès direct aux données
-- CRUD operations
-- Requêtes spécifiques (filtrage, agrégation)
-
-**Middleware** (`src/middleware/`):
-- Authentification JWT
-- Gestion globale des erreurs
-- Logging des requêtes
-
-### Frontend - Composants et Contextes
-
-```
-┌─────────────────────────────┐
-│     Pages / Composants      │
-├─────────────────────────────┤
-│     Contexts (State)        │ (AuthContext, BudgetContext)
-├─────────────────────────────┤
-│     Services (API)          │ (AuthService, APIClient)
-├─────────────────────────────┤
-│     Hooks                   │ (useAuth, useBudget)
-├─────────────────────────────┤
-│     Utils                   │ (formatters, validators)
-└─────────────────────────────┘
-```
+**Services** (`src/services/`) — `ApiClient` (Singleton + Façade) centralise les appels HTTP. `authService` gère register/login côté frontend.
 
 ---
 
-## Flux de Données
+## Flux de données
 
-### Flux d'Authentification
+### Authentification
 
-```
-1. User remplit formulaire Login
-   ↓
-2. Form handleSubmit() → Login Page
-   ↓
-3. authService.login(email, password)
-   ↓
-4. authAPI.login() → POST /api/auth/login
-   ↓
-5. Backend: authController.login()
-   → authService.login() [Singleton]
-   → Hashage + Vérification mot de passe
-   → Gésizeération JWT
-   ↓
-6. Token + User retournés au frontend
-   ↓
-7. saveToken() + saveUser() → Session Storage
-   ↓
-8. AuthContext mis à jour
-   ↓
-9. Components réagissent (useAuth hook)
-```
+L'utilisateur remplit le formulaire de connexion. `authService.login()` envoie `POST /api/auth/login`. Le backend vérifie le mot de passe avec bcryptjs, génère un token JWT et le retourne. Le frontend sauvegarde le token dans `localStorage` avec un `loginTime`. `AuthContext` est mis à jour et `Navbar` affiche le nom de l'utilisateur. Après 30 minutes, la session expire automatiquement.
 
-### Flux d'Ajout de Transaction
+### Ajout d'une transaction
 
-```
-1. TransactionForm.jsx
-   ↓
-2. validateTransaction() + handleSubmit()
-   ↓
-3. transactionAPI.create(data)
-   → apiClient.post('/transactions', data)
-   → Ajoute Authorization header
-   ↓
-4. Backend: transactionController.create()
-   → authMiddleware vérifie JWT
-   → TransactionService.create()
-   ↓
-5. TransactionRepository.create()
-   → Sauvegarde en database.json
-   ↓
-6. NotificationService.notify(TRANSACTION_ADDED)
-   → LoggingObserver.update()
-   → BudgetAlertObserver.update()
-   ↓
-7. Frontend reçoit réponse
-   → budgetObservable.notify('budget.updated')
-   → BudgetContext mis à jour
-   ↓
-8. Dashboard rechargé (useEffect)
-```
+`TransactionForm` soumet le formulaire. `DashboardPage` appelle `apiClient.post('/transactions', data)` avec le token JWT en header. Le backend passe par `authMiddleware` qui vérifie le token, puis par `transactionController` qui délègue à `BudgetFacade.addTransactionWithNotifications()`. La façade crée la transaction via `TransactionService`, recalcule le budget via `BudgetService`, et notifie via `NotificationService`. La réponse revient au frontend qui recharge le dashboard.
 
 ---
 
-## Structures de Données Clés
+## Structures de données
 
 ### User
-
 ```javascript
 {
   id: "uuid",
-  firstName: "Souleymane",
-  lastName: "Sow",
+  firstName: "Prénom",
+  lastName: "Nom",
   email: "user@example.com",
-  password: "hashedPassword",
-  monthlyBudgetLimit: 5000,
-  createdAt: "2026-02-22T...",
-  updatedAt: "2026-02-22T..."
+  password: "hash_bcrypt",
+  monthlyBudgetLimit: 2000,
+  createdAt: "2026-03-29T...",
+  updatedAt: "2026-03-29T..."
 }
 ```
 
 ### Transaction
-
 ```javascript
 {
   id: "uuid",
   userId: "uuid",
   type: "income" | "expense",
-  amount: 1500.50,
-  category: "housing",
-  frequency: "monthly",
-  description: "Loyer",
-  date: "2026-02-22T...",
-  createdAt: "2026-02-22T...",
-  updatedAt: "2026-02-22T..."
+  amount: 150.50,
+  category: "Alimentation",
+  frequency: "once",
+  description: "Épicerie",
+  date: "2026-03-29T...",
+  createdAt: "2026-03-29T...",
+  updatedAt: "2026-03-29T..."
 }
 ```
 
 ### Budget Summary
-
 ```javascript
 {
-  userId: "uuid",
   totalIncome: 3000,
-  totalExpense: 2500,
-  balance: 500,
+  totalExpenses: 1200,
+  balance: 1800,
   indicator: "positive",
-  monthlyBudgetLimit: 5000,
-  budgetRemaining: 2500,
-  isOverBudget: false,
-  period: {
-    startDate: "2026-02-01T...",
-    endDate: "2026-02-28T..."
-  }
+  monthlyLimit: 2000,
+  recommendations: [],
+  lastUpdated: "2026-03-29T..."
 }
-```
-
----
-
-## Endpoints API
-
-### Authentification
-```
-POST /api/auth/register         → Créer compte
-POST /api/auth/login            → Se connecter
-POST /api/auth/logout           → Se déconnecter
-GET  /api/auth/verify           → Vérifier token (protégé)
-```
-
-### Transactions
-```
-POST   /api/transactions         → Créer transaction (protégé)
-GET    /api/transactions         → Lister toutes (protégé)
-GET    /api/transactions/income  → Lister revenus (protégé)
-GET    /api/transactions/expense → Lister dépenses (protégé)
-GET    /api/transactions/filter  → Filtrer (protégé)
-PUT    /api/transactions/:id     → Mettre à jour (protégé)
-DELETE /api/transactions/:id     → Supprimer (protégé)
-```
-
-### Budget
-```
-GET  /api/budget/summary              → Réaggregateé (protégé)
-GET  /api/budget/category-breakdown   → Répartition (protégé)
-GET  /api/budget/recommendations      → Recommandations (protégé)
-POST /api/budget/set-monthly-limit    → Définir budget (protégé)
-GET  /api/budget/monthly-limit        → Obtenir budget (protégé)
-GET  /api/budget/comprehensive-report → Rapport complet (protégé)
-GET  /api/budget/export/csv           → Export CSV (protégé)
 ```
 
 ---
 
 ## Sécurité
 
-### Frontend
-- ✅ Token stocké en sessionStorage (pas localStorage pour plus de sécurité)
-- ✅ Validation des formulaires côté client
-- ✅ PrivateRoute pour protection des pages
-- ✅ Logout automatique si token expiré
+Côté backend, les mots de passe sont hashés avec bcryptjs (saltRounds: 10). Les tokens JWT expirent après 24h. Toutes les routes de transactions et budget sont protégées par `authMiddleware`. Chaque repository filtre les données par `userId` — un utilisateur ne peut pas accéder aux transactions d'un autre.
 
-### Backend
-- ✅ Mots de passe hashés avec bcryptjs
-- ✅ Tokens JWT avec expiration
-- ✅ Middleware d'authentification sur routes protégées
-- ✅ CORS configuré
-- ✅ Isolation des données par utilisateur
+Côté frontend, le token est stocké dans `localStorage`. La session expire après 30 minutes d'inactivité (géré par `Navbar` via `setTimeout`). Les pages protégées sont enveloppées dans `ProtectedRoute`.
 
 ---
 
-## Performance
+## Tests
 
-### Frontend
-- ✅ Vite pour build rapide
-- ✅ React Router pour SPA
-- ✅ Cache des requêtes API (localStorage)
-- ✅ Lazy loading des routes (à implémenter)
+Les tests sont dans deux dossiers :
 
-### Backend
-- ✅ Temps réponse < 5 secondes
-- ✅ Endpoints optimisés
-- ✅ Pagination pour les listes (à implémenter)
-- ✅ Compression des réponses (à implémenter)
+`backend/src/__tests__/` — tests de Souleymane :
+- `database.test.js` — 12 tests sur le Singleton Database
+- `authService.test.js` — 12 tests sur le Singleton AuthService, bcrypt et JWT
 
----
+`backend/__tests__/` — tests de Ruth :
+- `BudgetFacade.test.js` — façade et intégration des services
+- `BudgetFacade.simple.test.js` — tests simplifiés de la façade
+- `BalanceCalculation.test.js` — calcul du solde
+- `FilteringAndQueries.test.js` — filtres et tri des transactions
+- `ObserverPattern.test.js` — patron Observer et notifications
 
-## Évolution Future (Phase IV)
+Lancer tous les tests :
+```bash
+npm test -w backend
+```
 
-### Base de Données
-- Migration de JSON vers MongoDB ou PostgreSQL
-- Indexation pour performances
-- Sauvegardes régulièresponse
-
-### Features Avancées
-- Catégorisation smart (ML)
-- Prédictions budgétaires
-- Notifications push
-- Mobile app (React Native)
-- Graphiques avancés (Chart.js)
-
-### Optimisations
-- Pagination côté serveur
-- Compression (gzip)
-- CDN pour assets
-- Caching (Redis)
-- Rate limiting
+Résultat : **86/86 tests passent**.
 
 ---
 
-## Guide de Contribution
+## Conventions de codage
 
-### Ajouter une nouvelle feature
+Les fonctions utilisent `camelCase`, les classes `PascalCase`, les constantes `UPPER_SNAKE_CASE`. Les fichiers JS suivent `camelCase.js`, les composants React `PascalCase.jsx`.
 
-1. **Backend**:
-   - Ajouter validations dans `utils/validators.js`
-   - Créer repository si sizeécessaire
-   - Créer service avec logique maximumétier
-   - Créer controller
-   - Ajouter routes
+Chaque fichier commence par les imports et termine par l'export. La gestion d'erreurs est explicite avec try/catch dans tous les services. Les logs passent par `logger.js` — jamais de `console.log` direct dans le code de production.
 
-2. **Frontend**:
-   - Créer API wrapper dans `services/api/`
-   - Ajouter contexte React si sizeécessaire
-   - Créer composants
-   - Ajouter page
-
-3. **Testing**:
-   - Tests unitaires pour services
-   - Tests d'intégration pour API
-   - Tests de composants React
-
----
-
-## Conventions de Codage
-
-### Nommage
-- Fonctions: `camelCase`
-- Classes: `PascalCase`
-- Constantes: `UPPER_SNAKE_CASE`
-- Fichiers: `camelCase.js` ou `PascalCase.jsx`
-
-### Structure
-- Imports en haut
-- Exports à la fin
-- Commentaires JSDoc pour fonctions publiques
-- Gestion d'erreurs explicite
-
-### Commits Git
+Messages de commit :
 ```
 [FEATURE] Description courte
 [BUGFIX] Description courte
@@ -397,63 +170,12 @@ GET  /api/budget/export/csv           → Export CSV (protégé)
 
 ---
 
-**Équipe**: Souleymane Sow, Moses Kasindi, Ruth Kegmo
-**Session**: H2026
-**Dernière mise à jour**: 2026-02-22
+## Évolutions prévues
+
+Migration de JSON vers une vraie base de données (MongoDB ou PostgreSQL). Pagination côté serveur pour les listes de transactions. Graphiques avec Chart.js. Notifications push. Export PDF en plus du CSV.
 
 ---
 
-## Améliorations Phase III
-
-### Singleton Database (ajout Phase III)
-
-Le patron Singleton a été étendu à la base de données. Avant la Phase III,
-chaque appel à `loadDatabase()` effectuait une lecture disque. Désormais,
-les données sont chargées une seule fois en maximumémoire au démarrage.
-
-**Avant (Phase II) :**
-```javascript
-
-export function loadDatabase() {
-  return JSON.parse(fs.readFileSync(dbFilePath, 'utf-8'));
-}
-```
-
-**Après (Phase III) :**
-```javascript
-
-export function loadDatabase() {
-  return Database.getInstance().getData();
-}
-```
-
-**Double maximumécanisme de protection :**
-1. Cache de modules Node.js — maximumême import = maximumême objet
-2. Variable statique `Database._instance` — guard dans le constructor
-
-### Middleware d'erreur centralisé (ajout Phase III)
-
-Fichier dédié `src/middleware/errorHandler.js` séparé de `authMiddleware.js`.
-Implémente le patron Chain of Responsibility d'Express.
-
-- `errorHandler` — intercepte toutes les erreurs, masque les détails en production
-- `notFoundHandler` — gère les routes inexistantes
-- `validate` — applique un schéma Joi à `req.body`
-
-### Tests unitaires (ajout Phase III)
-```
-backend/src/__tests__/
-├── database.test.js    → 14 tests — Singleton Database
-└── authService.test.js → 10 tests — Singleton AuthService + bcrypt + JWT
-```
-
-**Lancer les tests :**
-```bash
-npm test -w backend
-```
-
-**Résultats : 24/24 tests passent**
-
----
-
-**Dernière mise à jour**: 2026-03-25 — Phase III
+**Équipe :** Souleymane Sow, Moses Kasindi, Ruth Kegmo
+**Session :** H2026
+**Dernière mise à jour :** 2026-03-29 — Phase III

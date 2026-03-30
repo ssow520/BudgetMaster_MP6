@@ -1,7 +1,7 @@
-# API Documentation - BudgetMaster
+# API Documentation — BudgetMaster
 
-**Base URL**: `http:
-**Authentification**: Bearer Token JWT (header `Authorization`)
+**Base URL** : `http://localhost:3001/api`
+**Authentification** : header `Authorization: Bearer <token>`
 
 ---
 
@@ -10,43 +10,45 @@
 ### POST /auth/register
 Créer un nouveau compte.
 
-**Body:**
+**Body :**
 ```json
 {
-  "firstName": "Souleymane",
-  "lastName": "Sow",
+  "firstName": "Prénom",
+  "lastName": "Nom",
   "email": "user@example.com",
   "password": "MotDePasse123!"
 }
 ```
-**Réponses:** `201 Created` | `400 Bad Request`
+Retourne `201` si le compte est créé, `400` si l'email est déjà pris ou si les données sont invalides.
 
 ---
 
 ### POST /auth/login
-Se connecter et obtenir un token JWT.
+Se connecter.
 
-**Body:**
+**Body :**
 ```json
-{ "email": "user@example.com", "password": "MotDePasse123!" }
+{
+  "email": "user@example.com",
+  "password": "MotDePasse123!"
+}
 ```
-**Réponses:** `200 OK` avec `{ token, user }` | `401 Unauthorized`
+Retourne un token JWT et les infos de base de l'utilisateur. `401` si les identifiants sont incorrects.
 
 ---
 
 ### POST /auth/logout
-Se déconnecter.
+Déconnecter l'utilisateur courant.
 
-**Headers:** `Authorization: Bearer <token>`
-**Réponses:** `200 OK`
+**Headers :** `Authorization: Bearer <token>`
 
 ---
 
 ### GET /auth/verify
-Vérifier si le token est valide.
+Vérifier si le token est encore valide.
 
-**Headers:** `Authorization: Bearer <token>`
-**Réponses:** `200 OK` | `401 Unauthorized`
+**Headers :** `Authorization: Bearer <token>`
+Retourne `200` si valide, `401` sinon.
 
 ---
 
@@ -55,130 +57,124 @@ Vérifier si le token est valide.
 ### POST /transactions
 Ajouter une transaction.
 
-**Headers:** `Authorization: Bearer <token>`
-**Body:**
+**Headers :** `Authorization: Bearer <token>`
+
+**Body :**
 ```json
 {
   "type": "expense",
   "amount": 150.00,
-  "category": "food",
-  "frequency": "monthly",
-  "description": "Épicerie",
-  "date": "2026-03-25"
+  "category": "Food",
+  "description": "Épicerie semaine",
+  "date": "2026-03-29"
 }
 ```
-**Réponses:** `201 Created` | `400 Bad Request` | `401 Unauthorized`
+Le champ `type` accepte `income` ou `expense`. La `category` est libre. Retourne `201` si ajoutée.
 
 ---
 
 ### GET /transactions
-Lister toutes les transactions de l'utilisateur connecté.
+Toutes les transactions de l'utilisateur connecté.
 
-**Headers:** `Authorization: Bearer <token>`
-**Réponses:** `200 OK` avec liste des transactions
+**Headers :** `Authorization: Bearer <token>`
 
 ---
 
 ### GET /transactions/income
-Lister les revenus uniquement.
+Revenus seulement.
 
-**Headers:** `Authorization: Bearer <token>`
-**Réponses:** `200 OK`
+**Headers :** `Authorization: Bearer <token>`
 
 ---
 
 ### GET /transactions/expense
-Lister les dépenses uniquement.
+Dépenses seulement.
 
-**Headers:** `Authorization: Bearer <token>`
-**Réponses:** `200 OK`
+**Headers :** `Authorization: Bearer <token>`
 
 ---
 
 ### PUT /transactions/:id
-Modifier une transaction.
+Modifier une transaction existante.
 
-**Headers:** `Authorization: Bearer <token>`
-**Body:** Champs à modifier
-**Réponses:** `200 OK` | `404 Not Found`
+**Headers :** `Authorization: Bearer <token>`
+
+**Body :** les champs à changer (`amount`, `category`, `description`, etc.)
+Retourne `404` si la transaction n'appartient pas à l'utilisateur ou n'existe pas.
 
 ---
 
 ### DELETE /transactions/:id
 Supprimer une transaction.
 
-**Headers:** `Authorization: Bearer <token>`
-**Réponses:** `200 OK` | `404 Not Found`
+**Headers :** `Authorization: Bearer <token>`
+Retourne `404` si introuvable.
 
 ---
 
 ## Budget
 
 ### GET /budget/summary
-Obtenir le rétotalé budgétaire du mois en cours.
+Résumé du mois en cours : revenus, dépenses, solde, limite mensuelle.
 
-**Headers:** `Authorization: Bearer <token>`
-**Réponse:**
+**Headers :** `Authorization: Bearer <token>`
+
 ```json
 {
   "totalIncome": 3000,
-  "totalExpense": 2500,
-  "balance": 500,
+  "totalExpenses": 1200,
+  "balance": 1800,
   "indicator": "positive",
-  "monthlyBudgetLimit": 5000,
-  "budgetRemaining": 2500,
-  "isOverBudget": false
+  "monthlyLimit": 2000,
+  "recommendations": []
 }
 ```
 
 ---
 
 ### POST /budget/set-monthly-limit
-Définir le budget mensuel maximum.
+Définir la limite mensuelle de dépenses.
 
-**Headers:** `Authorization: Bearer <token>`
-**Body:** `{ "monthlyLimit": 3000 }`
-**Réponses:** `200 OK` | `400 Bad Request`
+**Headers :** `Authorization: Bearer <token>`
+
+**Body :** `{ "monthlyLimit": 2000 }`
+Retourne `400` si le montant est zéro ou négatif.
 
 ---
 
 ### GET /budget/recommendations
-Obtenir des recommandations basées sur le solde.
+Recommandations selon le solde du mois.
 
-**Headers:** `Authorization: Bearer <token>`
-**Réponses:** `200 OK` avec messages de recommandation
+**Headers :** `Authorization: Bearer <token>`
 
 ---
 
 ### GET /budget/category-breakdown
-Répartition des dépenses par catégorie.
+Dépenses regroupées par catégorie avec pourcentage du total.
 
-**Headers:** `Authorization: Bearer <token>`
-**Réponses:** `200 OK` avec pourcentages par catégorie
+**Headers :** `Authorization: Bearer <token>`
 
 ---
 
 ### GET /budget/export/csv
-Exporter toutes les transactions en CSV.
+Exporter les transactions en CSV.
 
-**Headers:** `Authorization: Bearer <token>`
-**Réponse:** Fichier `budgetmaster_export_[date].csv`
-
----
-
-## Codes d'erreur
-
-| Code | Signification |
-|------|--------------|
-| 200 | Succès |
-| 201 | Créé avec succès |
-| 400 | Données invalides |
-| 401 | Non authentifié |
-| 403 | Accès interdit |
-| 404 | Ressource non trouvée |
-| 500 | Erreur serveur |
+**Headers :** `Authorization: Bearer <token>`
+Retourne un fichier `budgetmaster_export_[date].csv`.
 
 ---
 
-**Équipe**: Souleymane Sow, Moses Kasindi, Ruth Kegmo
-**Dernière mise à jour**: 2026-03-25
+## Codes HTTP
+
+**200** — requête réussie.
+**201** — ressource créée (register, nouvelle transaction).
+**400** — données invalides ou manquantes.
+**401** — token absent, expiré ou invalide.
+**403** — authentifié mais pas autorisé à accéder à cette ressource.
+**404** — ressource introuvable.
+**500** — erreur inattendue côté serveur.
+
+---
+
+**Équipe :** Souleymane Sow, Moses Kasindi, Ruth Kegmo
+**Dernière mise à jour :** 2026-03-29

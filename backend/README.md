@@ -1,130 +1,109 @@
-# BudgetMaster Backend
+# Backend — BudgetMaster
 
-Backend API REST pour l'application BudgetMaster, développée avec Node.js et Express.
+API REST développée avec Node.js et Express.
 
-## Structure du Projet
+## Structure du projet
 
 ```
-src/
-├── config/
-│   └── database.js          # Configuration de la base de données (JSON simulée)
-├── controllers/
-│   ├── authController.js    # Contrôleurs pour l'authentification
-│   ├── budgetController.js  # Contrôleurs pour le budget/dashboard
-│   └── transactionController.js  # Contrôleurs pour les transactions
-├── services/
-│   ├── authService.js       # Service d'authentification (Singleton)
-│   ├── budgetService.js     # Service de gestion budgétaire (Façade)
-│   ├── transactionService.js # Service des transactions
-│   ├── userService.js       # Service utilisateur
-│   └── notificationService.js # Service de notification (Observable)
-├── repositories/
-│   ├── userRepository.js    # Accès aux données utilisateur
-│   ├── transactionRepository.js # Accès aux données transactions
-│   └── budgetRepository.js  # Accès aux données budget
-├── middleware/
-│   ├── authMiddleware.js    # Middleware d'authentification
-│   └── errorHandler.js      # Gestion des erreurs
-├── utils/
-│   ├── validators.js        # Validations limitétier
-│   ├── logger.js            # Système de log
-│   ├── observer.js          # Pattern Observer
-│   └── constants.js         # Constantes de l'application
-├── routes/
-│   ├── authRoutes.js        # Routes d'authentification
-│   ├── budgetRoutes.js      # Routes budget/dashboard
-│   └── transactionRoutes.js # Routes transactions
-├── server.js                # Point d'entrée
-└── .env                     # Variables d'environnement
+backend/
+├── src/
+│   ├── config/
+│   │   └── database.js              ← Singleton, stockage JSON
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── budgetController.js
+│   │   └── transactionController.js
+│   ├── services/
+│   │   ├── authService.js           ← Singleton
+│   │   ├── BudgetFacade.js          ← Façade + Singleton
+│   │   ├── budgetService.js         ← Singleton
+│   │   ├── transactionService.js    ← Singleton
+│   │   ├── userService.js           ← Singleton
+│   │   └── notificationService.js   ← Singleton + Observer
+│   ├── repositories/
+│   │   ├── userRepository.js
+│   │   └── transactionRepository.js
+│   ├── middleware/
+│   │   ├── authMiddleware.js        ← Vérification JWT
+│   │   └── errorHandler.js
+│   ├── utils/
+│   │   ├── validators.js
+│   │   ├── logger.js
+│   │   ├── observer.js              ← Observable + Observer abstraite
+│   │   └── constants.js
+│   ├── routes/
+│   │   ├── authRoutes.js
+│   │   ├── budgetRoutes.js
+│   │   └── transactionRoutes.js
+│   └── server.js
+├── __tests__/                       ← Tests Ruth
+├── src/__tests__/                   ← Tests Souleymane
+└── data/
+    └── database.json
 ```
 
-## Installation et Démarrage
-
-### Installation des dépendances
+## Démarrage
 
 ```bash
 cd backend
 npm install
+npm run dev
 ```
 
-### Variables d'environnement
+Serveur disponible sur `http://localhost:3001`.
 
-Créez un fichier `.env` à la racine du backend :
+## Variables d'environnement
+
+Le fichier `.env` à la racine de `backend/` :
 
 ```
 NODE_ENV=development
-PORT=5000
-JWT_SECRET=your_secret_key_change_in_production
+PORT=3001
+JWT_SECRET=votre_secret_jwt
 JWT_EXPIRE=24h
-CORS_ORIGIN=http:
+CORS_ORIGIN=http://localhost:5173
 ```
 
-### Démarrage
+## Patrons de conception
 
-```bash
-# Développement (avec hot reload)
-npm run dev
+**Singleton** — appliqué à `Database`, `AuthService`, `BudgetService`, `TransactionService`, `UserService`, `NotificationService` et `BudgetFacade`. Une seule instance de chaque service existe dans toute l'application.
 
-# Production
-npm start
+**Façade** — `BudgetFacade` centralise toutes les opérations complexes. Les contrôleurs passent par la façade plutôt qu'appeler plusieurs services directement.
+
+**Observer** — `NotificationService` maintient une liste d'observateurs (`LoggingObserver`, `BudgetAlertObserver`) notifiés automatiquement lors des événements (transaction ajoutée, budget dépassé, etc.).
+
+## Endpoints principaux
+
 ```
+POST   /api/auth/register
+POST   /api/auth/login
+POST   /api/auth/logout
+GET    /api/auth/verify
 
-Le serveur sera disponible sur `http:
+GET    /api/transactions
+POST   /api/transactions
+PUT    /api/transactions/:id
+DELETE /api/transactions/:id
+GET    /api/transactions/income
+GET    /api/transactions/expense
+GET    /api/transactions/export
 
-## Patrons de Conception Implémentés
-
-### 1. **Singleton - AuthService**
-- Assure qu'une seule instance du service d'authentification existe
-- Gère les mots de passe hashés et les tokens JWT
-- Utilisé globalement par tous les contrôleurs
-
-### 2. **Façade - BudgetService**
-- Simplifie l'interaction avec les services complexes
-- Expose une interface unifiée pour :
-  - Calculer le solde
-  - Obtenir les statistiques budgétaires
-  - Gécountérer des recommandations
-- Masque la complexité des services sous-jacents
-
-### 3. **Observer - NotificationService**
-- Notifie les systèmes intéressés des changements
-- Utilisé pour :
-  - Alerter sur le dépassement de budget
-  - Logger les actions importantes
-  - Permettre des extensions futures
-
-## API Endpoints
-
-### Authentification
-- `POST /api/auth/register` - Créer un compte
-- `POST /api/auth/login` - Se connecter
-- `POST /api/auth/logout` - Se déconnecter
-
-### Transactions
-- `GET /api/transactions` - Lister les transactions (authentifié)
-- `POST /api/transactions` - Ajouter une transaction
-- `PUT /api/transactions/:id` - Modifier une transaction
-- `DELETE /api/transactions/:id` - Supprimer une transaction
-- `GET /api/transactions/filter` - Filtrer les transactions
-
-### Budget/Dashboard
-- `GET /api/budget/summary` - Réaggregateé budgétaire
-- `GET /api/budget/recommendations` - Recommandations
-- `POST /api/budget/set-limit` - Définir un budget mensuel
-- `GET /api/budget/category-breakdown` - Répartition par catégorie
-- `GET /api/budget/export` - Exporter en CSV
-
-## Sécurité
-
-- ✅ Mots de passe hashés avec bcryptjs
-- ✅ Authentification JWT
-- ✅ CORS configuré
-- ✅ Middleware de validation des requêtes
-- ✅ Isolation des données par utilisateur
+GET    /api/budget/summary
+GET    /api/budget/recommendations
+GET    /api/budget/category-breakdown
+GET    /api/budget/comprehensive-report
+POST   /api/budget/set-monthly-limit
+```
 
 ## Tests
 
 ```bash
-npm test
-npm run test:watch
+npm test -w backend
 ```
+
+Résultat : **86/86 tests passent**.
+
+---
+
+**Équipe :** Souleymane Sow, Moses Kasindi, Ruth Kegmo
+**Session :** H2026
