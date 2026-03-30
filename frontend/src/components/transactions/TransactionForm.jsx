@@ -12,11 +12,22 @@ const CATEGORIES = [
   'Autre',
 ]
 
+const FREQUENCIES = [
+  { value: 'once', label: 'Une seule fois' },
+  { value: 'daily', label: 'Quotidienne' },
+  { value: 'weekly', label: 'Hebdomadaire' },
+  { value: 'monthly', label: 'Mensuelle' },
+]
+
+const today = new Date().toISOString().split('T')[0]
+
 const TransactionForm = ({ onSubmit }) => {
   const [type, setType] = useState('expense')
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState('')
   const [description, setDescription] = useState('')
+  const [frequency, setFrequency] = useState('once')
+  const [date, setDate] = useState(today)
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -27,12 +38,15 @@ const TransactionForm = ({ onSubmit }) => {
       amount: parseFloat(amount),
       category: category || 'Autre',
       description,
-      date: new Date().toISOString(),
+      frequency,
+      date: new Date(date).toISOString(),
     })
 
     setAmount('')
     setCategory('')
     setDescription('')
+    setFrequency('once')
+    setDate(today)
   }
 
   return (
@@ -69,6 +83,24 @@ const TransactionForm = ({ onSubmit }) => {
             <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
+
+        <select
+          className="form-control"
+          value={frequency}
+          onChange={(e) => setFrequency(e.target.value)}
+        >
+          {FREQUENCIES.map((f) => (
+            <option key={f.value} value={f.value}>{f.label}</option>
+          ))}
+        </select>
+
+        <input
+          type="date"
+          className="form-control"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          required
+        />
 
         <input
           type="text"
