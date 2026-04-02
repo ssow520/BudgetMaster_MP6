@@ -16,11 +16,8 @@ export const create = async (req, res) => {
         req.body
     );
 
-    // MODIF : log temporaire pour voir le vrai résultat retourné
     console.log('RESULT CREATE =', result);
 
-    // MODIF : si la façade dit que ça a échoué, on renvoie une vraie erreur
-    // avant tu renvoyais toujours 201, même quand la création échouait
     if (!result?.success) {
       return res.status(HTTP_STATUS.BAD_REQUEST).json({
         success: false,
@@ -44,8 +41,6 @@ export const create = async (req, res) => {
 
 export const getAll = (req, res) => {
   try {
-    // MODIF : appel direct à la méthode statique
-    // avant : TransactionService.getInstance().getAll(...)
     const result = TransactionService.getAll(req.user.userId);
 
     return res.status(HTTP_STATUS.OK).json({
@@ -65,7 +60,6 @@ export const getAll = (req, res) => {
 
 export const getIncome = (req, res) => {
   try {
-    // MODIF : appel direct à la méthode statique
     const result = TransactionService.getIncome(req.user.userId);
 
     return res.status(HTTP_STATUS.OK).json({
@@ -85,7 +79,6 @@ export const getIncome = (req, res) => {
 
 export const getExpense = (req, res) => {
   try {
-    // MODIF : appel direct à la méthode statique
     const result = TransactionService.getExpense(req.user.userId);
 
     return res.status(HTTP_STATUS.OK).json({
@@ -112,7 +105,6 @@ export const update = async (req, res) => {
         req.body
     );
 
-    // MODIF : même logique de sécurité que pour create
     if (!result?.success) {
       return res.status(HTTP_STATUS.BAD_REQUEST).json({
         success: false,
@@ -142,7 +134,6 @@ export const delete_ = async (req, res) => {
         id
     );
 
-    // MODIF : même logique de sécurité que pour create
     if (!result?.success) {
       return res.status(HTTP_STATUS.BAD_REQUEST).json({
         success: false,

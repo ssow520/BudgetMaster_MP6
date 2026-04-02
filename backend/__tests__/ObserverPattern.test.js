@@ -61,7 +61,9 @@ describe('Observer Pattern Notifications Tests', () => {
       });
 
       const transactionNotif = received.find(n => n.eventType === 'transaction.added');
+
       expect(transactionNotif).toBeDefined();
+
       expect(transactionNotif.data.transaction.amount).toBe(75);
     });
   });
@@ -79,11 +81,25 @@ describe('Observer Pattern Notifications Tests', () => {
       notificationService.subscribe(new TestObserver());
 
       await facade.setMonthlyBudgetLimit(testUserId, 100);
-      await facade.addTransactionWithNotifications(testUserId, { type: 'expense', amount: 80, category: 'Food', description: 'Déjeuner', date: new Date().toISOString() });
-      await facade.addTransactionWithNotifications(testUserId, { type: 'expense', amount: 30, category: 'Transport', description: 'Essence', date: new Date().toISOString() });
+      await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'expense', 
+        amount: 80, 
+        category: 'Food', 
+        description: 'Déjeuner', 
+        date: new Date().toISOString() 
+      });
+      await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'expense', 
+        amount: 30, 
+        category: 'Transport', 
+        description: 'Essence', 
+        date: new Date().toISOString() 
+      });
 
       const overageNotif = received.find(n => n.eventType === 'budget_exceeded');
+
       expect(overageNotif).toBeDefined();
+
       expect(overageNotif.data.overage).toBeGreaterThan(0);
     });
 
@@ -99,7 +115,13 @@ describe('Observer Pattern Notifications Tests', () => {
       notificationService.subscribe(new TestObserver());
 
       await facade.setMonthlyBudgetLimit(testUserId, 500);
-      await facade.addTransactionWithNotifications(testUserId, { type: 'expense', amount: 50, category: 'Food', description: 'Déjeuner', date: new Date().toISOString() });
+      await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'expense', 
+        amount: 50, 
+        category: 'Food', 
+        description: 'Déjeuner', 
+        date: new Date().toISOString() 
+      });
 
       const overageNotif = received.find(n => n.eventType === 'budget_exceeded');
       expect(overageNotif).toBeUndefined();
@@ -118,8 +140,16 @@ describe('Observer Pattern Notifications Tests', () => {
 
       notificationService.subscribe(new TestObserver());
 
-      const result = await facade.addTransactionWithNotifications(testUserId, { type: 'expense', amount: 50, category: 'Food', description: 'Déjeuner', date: new Date().toISOString() });
-      await facade.updateTransactionWithNotifications(testUserId, result.transaction.id, { amount: 75 });
+      const result = await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'expense', 
+        amount: 50, 
+        category: 'Food', 
+        description: 'Déjeuner', 
+        date: new Date().toISOString() 
+      });
+      await facade.updateTransactionWithNotifications(testUserId, result.transaction.id, { 
+        amount: 75 
+      });
 
       const updateNotif = received.find(n => n.eventType === 'transaction_updated');
       expect(updateNotif).toBeDefined();
@@ -138,7 +168,13 @@ describe('Observer Pattern Notifications Tests', () => {
 
       notificationService.subscribe(new TestObserver());
 
-      const result = await facade.addTransactionWithNotifications(testUserId, { type: 'expense', amount: 75, category: 'Food', description: 'Déjeuner', date: new Date().toISOString() });
+      const result = await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'expense', 
+        amount: 75, 
+        category: 'Food', 
+        description: 'Déjeuner', 
+        date: new Date().toISOString() 
+      });
       await facade.deleteTransactionWithNotifications(testUserId, result.transaction.id);
 
       const deleteNotif = received.find(n => n.eventType === 'transaction_deleted');
@@ -184,6 +220,7 @@ describe('Observer Pattern Notifications Tests', () => {
       }
 
       notificationService.subscribe(new TestObserver());
+      
       notificationService.clearSubscribers();
 
       expect(notificationService.getObserverCount()).toBe(2);

@@ -22,8 +22,11 @@ describe('BudgetFacade', () => {
       });
 
       expect(result.transaction).toBeDefined();
+
       expect(result.transaction.amount).toBe(1000);
+
       expect(result.budget).toBeDefined();
+
       expect(result.isOverBudget).toBe(false);
     });
 
@@ -63,43 +66,102 @@ describe('BudgetFacade', () => {
       const summary = await facade.getDashboardSummary(testUserId);
 
       expect(summary.totalIncome).toBe(2000);
+
       expect(summary.totalExpenses).toBe(500);
+
       expect(summary.balance).toBe(1500);
+
       expect(summary.recommendations).toBeDefined();
     });
 
     test('devrait calculer le solde correctement avec plusieurs transactions', async () => {
-      await facade.addTransactionWithNotifications(testUserId, { type: 'income', amount: 1000, category: 'Salary', description: 'Salaire', date: new Date().toISOString() });
-      await facade.addTransactionWithNotifications(testUserId, { type: 'income', amount: 200, category: 'Bonus', description: 'Bonus', date: new Date().toISOString() });
-      await facade.addTransactionWithNotifications(testUserId, { type: 'expense', amount: 300, category: 'Rent', description: 'Loyer', date: new Date().toISOString() });
-      await facade.addTransactionWithNotifications(testUserId, { type: 'expense', amount: 150, category: 'Food', description: 'Épicerie', date: new Date().toISOString() });
+      await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'income', 
+        amount: 1000, 
+        category: 'Salary', 
+        description: 'Salaire', 
+        date: new Date().toISOString() 
+      });
+      await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'income', 
+        amount: 200, 
+        category: 'Bonus', 
+        description: 'Bonus', 
+        date: new Date().toISOString() 
+      });
+      await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'expense', 
+        amount: 300, 
+        category: 'Rent', 
+        description: 'Loyer', 
+        date: new Date().toISOString() });
+      await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'expense', 
+        amount: 150, 
+        category: 'Food', 
+        description: 'Épicerie', 
+        date: new Date().toISOString() 
+      });
 
       const summary = await facade.getDashboardSummary(testUserId);
 
       expect(summary.totalIncome).toBe(1200);
+
       expect(summary.totalExpenses).toBe(450);
+
       expect(summary.balance).toBe(750);
     });
   });
 
   describe('getCategoryBreakdown', () => {
     test('devrait retourner la répartition des dépenses par catégorie', async () => {
-      await facade.addTransactionWithNotifications(testUserId, { type: 'expense', amount: 500, category: 'Food', description: 'Épicerie', date: new Date().toISOString() });
-      await facade.addTransactionWithNotifications(testUserId, { type: 'expense', amount: 500, category: 'Rent', description: 'Loyer', date: new Date().toISOString() });
+      await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'expense', 
+        amount: 500, 
+        category: 'Food', 
+        description: 'Épicerie', 
+        date: new Date().toISOString() 
+      });
+      await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'expense', 
+        amount: 500, 
+        category: 'Rent', 
+        description: 'Loyer', 
+        date: new Date().toISOString() 
+      });
 
       const breakdown = await facade.getCategoryBreakdown(testUserId);
 
       expect(breakdown.length).toBe(2);
+
       expect(breakdown[0].percentage).toBe('50.00');
+
       expect(breakdown[1].percentage).toBe('50.00');
     });
   });
 
   describe('getFilteredTransactions', () => {
     beforeEach(async () => {
-      await facade.addTransactionWithNotifications(testUserId, { type: 'income', amount: 1000, category: 'Salary', description: 'Salaire', date: '2026-03-10' });
-      await facade.addTransactionWithNotifications(testUserId, { type: 'expense', amount: 300, category: 'Food', description: 'Épicerie', date: '2026-03-15' });
-      await facade.addTransactionWithNotifications(testUserId, { type: 'expense', amount: 200, category: 'Transport', description: 'Essence', date: '2026-03-18' });
+      await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'income', 
+        amount: 1000, 
+        category: 'Salary', 
+        description: 'Salaire', 
+        date: '2026-03-10' 
+      });
+      await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'expense', 
+        amount: 300, 
+        category: 'Food', 
+        description: 'Épicerie', 
+        date: '2026-03-15' 
+      });
+      await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'expense', 
+        amount: 200, 
+        category: 'Transport', 
+        description: 'Essence', 
+        date: '2026-03-18' });
     });
 
     test('devrait filtrer les transactions par type', async () => {
@@ -133,8 +195,11 @@ describe('BudgetFacade', () => {
       const csv = await facade.exportTransactionsAsCSV(testUserId);
 
       expect(csv).toContain('Date,Type,Montant,Catégorie,Description');
+
       expect(csv).toContain('Revenu');
+
       expect(csv).toContain('1000');
+
       expect(csv).toContain('Salary');
     });
   });
@@ -157,18 +222,37 @@ describe('BudgetFacade', () => {
 
   describe('getComprehensiveReport', () => {
     test('devrait générer un rapport complet', async () => {
-      await facade.addTransactionWithNotifications(testUserId, { type: 'income', amount: 2000, category: 'Salary', description: 'Salaire', date: new Date().toISOString() });
-      await facade.addTransactionWithNotifications(testUserId, { type: 'expense', amount: 500, category: 'Rent', description: 'Loyer', date: new Date().toISOString() });
+      await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'income', 
+        amount: 2000, 
+        category: 'Salary', 
+        description: 'Salaire', 
+        date: new Date().toISOString() 
+      });
+      await facade.addTransactionWithNotifications(testUserId, { 
+        type: 'expense', 
+        amount: 500, 
+        category: 'Rent', 
+        description: 'Loyer', 
+        date: new Date().toISOString() 
+      });
 
       const report = await facade.getComprehensiveReport(testUserId);
 
       expect(report.generatedAt).toBeDefined();
+
       expect(report.summary).toBeDefined();
+
       expect(report.summary.totalIncome).toBe(2000);
+
       expect(report.summary.totalExpenses).toBe(500);
+
       expect(report.categoryBreakdown).toBeDefined();
+
       expect(report.transactionCount).toBe(2);
+
       expect(report.analysis).toBeDefined();
+      
       expect(report.analysis.savingsRate).toBe('75.00');
     });
   });

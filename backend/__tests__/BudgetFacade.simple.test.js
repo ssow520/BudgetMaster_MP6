@@ -1,7 +1,3 @@
-/**
- * Tests simples pour BudgetFacade
- */
-
 import BudgetFacade from '../src/services/BudgetFacade.js';
 import TransactionRepository from '../src/repositories/transactionRepository.js';
 import notificationService from '../src/services/notificationService.js';
@@ -26,13 +22,21 @@ describe('BudgetFacade Simple Tests', () => {
     test('a toutes les méthodes requises', () => {
       const f = BudgetFacade.getInstance();
       expect(typeof f.getDashboardSummary).toBe('function');
+
       expect(typeof f.getFilteredTransactions).toBe('function');
+
       expect(typeof f.getCategoryBreakdown).toBe('function');
+
       expect(typeof f.setMonthlyBudgetLimit).toBe('function');
+
       expect(typeof f.exportTransactionsAsCSV).toBe('function');
+
       expect(typeof f.getComprehensiveReport).toBe('function');
+
       expect(typeof f.addTransactionWithNotifications).toBe('function');
+
       expect(typeof f.deleteTransactionWithNotifications).toBe('function');
+
       expect(typeof f.updateTransactionWithNotifications).toBe('function');
     });
   });
@@ -40,19 +44,29 @@ describe('BudgetFacade Simple Tests', () => {
   describe('Dashboard Summary', () => {
     test('retourne un résumé pour utilisateur vide', () => {
       const summary = facade.getDashboardSummary(testUserId);
+
       expect(summary).toBeDefined();
+
       expect(summary.totalIncome).toBeDefined();
+
       expect(summary.totalExpenses).toBeDefined();
+
       expect(summary.balance).toBeDefined();
     });
 
     test('contient toutes les clés requises', () => {
       const summary = facade.getDashboardSummary(testUserId);
+
       expect(summary).toHaveProperty('totalIncome');
+
       expect(summary).toHaveProperty('totalExpenses');
+
       expect(summary).toHaveProperty('balance');
+
       expect(summary).toHaveProperty('indicator');
+
       expect(summary).toHaveProperty('monthlyLimit');
+
       expect(summary).toHaveProperty('lastUpdated');
     });
   });
@@ -74,9 +88,13 @@ describe('BudgetFacade Simple Tests', () => {
       });
 
       const breakdown = facade.getCategoryBreakdown(testUserId);
+
       expect(breakdown.length).toBeGreaterThan(0);
+
       expect(breakdown[0]).toHaveProperty('category');
+
       expect(breakdown[0]).toHaveProperty('amount');
+
       expect(breakdown[0]).toHaveProperty('percentage');
     });
   });
@@ -107,19 +125,29 @@ describe('BudgetFacade Simple Tests', () => {
   describe('Comprehensive Report', () => {
     test('retourne un rapport avec toutes les sections', () => {
       const report = facade.getComprehensiveReport(testUserId);
+
       expect(report).toBeDefined();
+
       expect(report.generatedAt).toBeDefined();
+
       expect(report.summary).toBeDefined();
+
       expect(report.categoryBreakdown).toBeDefined();
+
       expect(report.transactionCount).toBeDefined();
+
       expect(report.recentTransactions).toBeDefined();
+
       expect(report.analysis).toBeDefined();
     });
 
     test('analyse contient les bons champs', () => {
       const report = facade.getComprehensiveReport(testUserId);
+
       expect(report.analysis).toHaveProperty('averageMonthlyIncome');
+
       expect(report.analysis).toHaveProperty('averageMonthlyExpense');
+
       expect(report.analysis).toHaveProperty('savingsRate');
     });
   });
@@ -142,7 +170,9 @@ describe('BudgetFacade Simple Tests', () => {
   describe('Notifications', () => {
     test('notificationService est disponible', () => {
       expect(notificationService).toBeDefined();
+
       expect(typeof notificationService.notify).toBe('function');
+      
       expect(typeof notificationService.subscribe).toBe('function');
     });
   });
