@@ -40,7 +40,9 @@ class TransactionService {
         date: value.date,
       });
 
-      NotificationService.notify(EVENT_TYPES.TRANSACTION_ADDED, { transaction, userId });
+      NotificationService.notify(EVENT_TYPES.TRANSACTION_ADDED, { 
+        transaction, userId 
+      });
       logger.info(`Transaction créée: ${transaction.id} (${value.type} - ${value.amount})`);
 
       return { success: true, transaction, message: SUCCESS_MESSAGES.TRANSACTION_ADDED };

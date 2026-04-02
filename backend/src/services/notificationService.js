@@ -25,8 +25,11 @@ class NotificationService {
       return NotificationService._instance;
     }
     this.observable = new Observable();
+
     this.observable.attach(new LoggingObserver());
+
     this.observable.attach(new BudgetAlertObserver());
+
     NotificationService._instance = this;
   }
 
@@ -51,7 +54,9 @@ class NotificationService {
 
   clearSubscribers() {
     this.observable.observers = [];
+
     this.observable.attach(new LoggingObserver());
+
     this.observable.attach(new BudgetAlertObserver());
   }
 
@@ -61,6 +66,9 @@ class NotificationService {
 }
 
 NotificationService._instance = null;
+
 const notificationService = new NotificationService();
+
 export { NotificationService };
+
 export default notificationService;

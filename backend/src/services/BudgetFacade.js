@@ -168,10 +168,13 @@ class BudgetFacade {
 
       if (filters.sortBy === 'amount' && filters.sortOrder === 'asc') {
         transactions.sort((a, b) => a.amount - b.amount);
+
       } else if (filters.sortBy === 'amount' && filters.sortOrder === 'desc') {
         transactions.sort((a, b) => b.amount - a.amount);
+
       } else if (filters.sortBy === 'date' && filters.sortOrder === 'asc') {
         transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+        
       } else {
         transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
       }
