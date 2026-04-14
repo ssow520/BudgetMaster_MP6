@@ -13,7 +13,7 @@ const CATEGORIES = [
 ]
 
 const FREQUENCIES = [
-  { value: 'once', label: 'Une seule fois' },
+  { value: 'one_time', label: 'Une seule fois' },
   { value: 'daily', label: 'Quotidienne' },
   { value: 'weekly', label: 'Hebdomadaire' },
   { value: 'monthly', label: 'Mensuelle' },
@@ -26,7 +26,7 @@ const TransactionForm = ({ onSubmit }) => {
   const [amount, setAmount] = useState('')
   const [category, setCategory] = useState('')
   const [description, setDescription] = useState('')
-  const [frequency, setFrequency] = useState('once')
+  const [frequency, setFrequency] = useState('one_time')
   const [date, setDate] = useState(today)
 
   const handleSubmit = (e) => {
@@ -45,7 +45,7 @@ const TransactionForm = ({ onSubmit }) => {
     setAmount('')
     setCategory('')
     setDescription('')
-    setFrequency('once')
+    setFrequency('one_time')
     setDate(today)
   }
 

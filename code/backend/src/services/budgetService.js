@@ -24,8 +24,8 @@ class BudgetService {
       const user = UserRepository.findById(userId) || { monthlyBudgetLimit: 0 };
 
       const now = new Date();
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      const startOfMonth = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
+      const endOfMonth = new Date(Date.UTC(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59));
 
       const totalIncome = TransactionRepository.calculateTotalIncome(userId, startOfMonth, endOfMonth);
       const totalExpense = TransactionRepository.calculateTotalExpense(userId, startOfMonth, endOfMonth);
@@ -58,8 +58,8 @@ class BudgetService {
   static getCategoryBreakdown(userId) {
     try {
       const now = new Date();
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      const startOfMonth = new Date(Date.UTC(now.getFullYear(), now.getMonth(), 1));
+      const endOfMonth = new Date(Date.UTC(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59));
 
       const expensesByCategory = TransactionRepository.getExpensesByCategory(userId, startOfMonth, endOfMonth);
 

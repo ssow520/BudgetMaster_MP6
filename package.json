@@ -4,13 +4,13 @@
   "description": "BudgetMaster - Full Stack Application",
   "private": true,
   "workspaces": [
-    "backend",
-    "frontend"
+    "code/backend",
+    "code/frontend"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev -w backend\" \"npm run dev -w frontend\"",
-    "build": "npm run build -w backend && npm run build -w frontend",
-    "test": "npm test -w backend && npm test -w frontend"
+    "dev": "concurrently \"npm run dev -w code/backend\" \"npm run dev -w code/frontend\"",
+    "build": "npm run build -w code/backend && npm run build -w code/frontend",
+    "test": "npm test -w code/backend && npm test -w code/frontend"
   },
   "devDependencies": {
     "concurrently": "^8.2.0"
