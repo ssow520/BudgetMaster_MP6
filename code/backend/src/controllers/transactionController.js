@@ -7,7 +7,6 @@ const facade = BudgetFacade.getInstance();
 
 export const create = async (req, res) => {
   try {
-    // MODIF : logs temporaires pour voir ce que le backend reçoit
     console.log('USER =', req.user);
     console.log('BODY =', req.body);
 

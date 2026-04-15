@@ -12,7 +12,6 @@ const DashboardPage = () => {
     totalExpenses: 0,
     balance: 0,
     indicator: 'balanced',
-    recommendations: [],
     monthlyLimit: 0,
   })
   const [loading, setLoading] = useState(true)
@@ -50,9 +49,7 @@ const DashboardPage = () => {
   const handleExportCSV = async () => {
     setExporting(true)
     try {
-      const response = await apiClient.get('/transactions/export', {
-        responseType: 'blob',
-      })
+      const response = await apiClient.get('/transactions/export', { responseType: 'blob' })
       const url = window.URL.createObjectURL(new Blob([response.data]))
       const link = document.createElement('a')
       const date = new Date().toISOString().split('T')[0]
@@ -76,9 +73,7 @@ const DashboardPage = () => {
     return (
       <div>
         <Navbar />
-        <div className="container">
-          <p>Chargement...</p>
-        </div>
+        <div className="container"><p>Chargement...</p></div>
       </div>
     )
   }
@@ -94,29 +89,27 @@ const DashboardPage = () => {
       <Navbar />
       <div className="container">
 
-        <div className="section-card">
-          <h2>Tableau de bord</h2>
-          <p>Bienvenue dans votre espace budgétaire.</p>
-          <button
-            onClick={handleExportCSV}
-            className="btn"
-            disabled={exporting}
-          >
-            {exporting ? 'Export...' : 'Exporter CSV'}
+        <div className="dashboard-header">
+          <div>
+            <h2>Tableau de bord</h2>
+            <p>Bienvenue dans votre espace budgétaire.</p>
+          </div>
+          <button onClick={handleExportCSV} className="btn btn-sm" disabled={exporting}>
+            {exporting ? 'Export...' : '↓ Exporter CSV'}
           </button>
         </div>
 
         {error && <p className="error-text">{error}</p>}
 
         {budgetRemaining !== null && alertVisible && (
-          <div className="section-card">
-            <button onClick={() => setAlertVisible(false)} aria-label="Fermer">×</button>
-            <p>
+          <div className={`alert ${isOverBudget ? 'alert-danger' : 'alert-success'}`}>
+            <span>
               {isOverBudget
                 ? `⚠ Budget dépassé de ${formatAmount(Math.abs(budgetRemaining))}`
-                : `Budget restant ce mois : ${formatAmount(budgetRemaining)}`
+                : `✓ Budget restant ce mois : ${formatAmount(budgetRemaining)}`
               }
-            </p>
+            </span>
+            <button onClick={() => setAlertVisible(false)} className="btn-close">×</button>
           </div>
         )}
 
@@ -127,18 +120,20 @@ const DashboardPage = () => {
           />
         </div>
 
-        <div className="section-card">
-          <RecommendationsComponent
-            income={summary.totalIncome}
-            expenses={summary.totalExpenses}
-          />
+        <div className="dashboard-grid">
+          <div className="section-card">
+            <RecommendationsComponent
+              income={summary.totalIncome}
+              expenses={summary.totalExpenses}
+            />
+          </div>
+          <div className="section-card">
+            <CategoryBreakdownComponent />
+          </div>
         </div>
 
-         <div className="section-card">
-          <CategoryBreakdownComponent />
-        </div>
-
         <div className="section-card">
+          <h3>Ajouter une transaction</h3>
           <TransactionForm onSubmit={handleAddTransaction} />
         </div>
 

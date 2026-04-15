@@ -94,8 +94,7 @@ const TransactionListPage = () => {
     setActiveTab('all')
   }
 
-  const formatDate = (date) =>
-    new Date(date).toLocaleDateString('fr-CA')
+  const formatDate = (date) => new Date(date).toLocaleDateString('fr-CA')
 
   const formatAmount = (amount) =>
     new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' }).format(amount)
@@ -127,59 +126,60 @@ const TransactionListPage = () => {
       <Navbar />
       <div className="container">
 
-        <div className="section-card">
-          <h2>Transactions</h2>
-          <p>{filteredTransactions.length} transaction{filteredTransactions.length !== 1 ? 's' : ''}</p>
+        <div className="dashboard-header">
+          <div>
+            <h2>Transactions</h2>
+            <p>{filteredTransactions.length} transaction{filteredTransactions.length !== 1 ? 's' : ''}</p>
+          </div>
+          <div className="tabs">
+            {TABS.map(tab => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={`tab-btn ${activeTab === tab.key ? 'active' : ''}`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {error && <p className="error-text">{error}</p>}
 
         <div className="section-card">
-          {TABS.map(tab => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={activeTab === tab.key ? 'btn' : 'btn btn-outline'}
+          <div className="filters-row">
+            <select
+              className="form-control"
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
             >
-              {tab.label}
+              <option value="">Toutes les catégories</option>
+              {CATEGORIES.map(cat => (
+                <option key={cat} value={cat}>{CATEGORY_ICONS[cat]} {cat}</option>
+              ))}
+            </select>
+            <input
+              type="date"
+              className="form-control"
+              value={filterStartDate}
+              onChange={(e) => setFilterStartDate(e.target.value)}
+            />
+            <input
+              type="date"
+              className="form-control"
+              value={filterEndDate}
+              onChange={(e) => setFilterEndDate(e.target.value)}
+            />
+            <button onClick={handleReset} className="btn btn-outline btn-sm">
+              Réinitialiser
             </button>
-          ))}
+          </div>
         </div>
 
-        <div className="section-card">
-          <h3>Filtres</h3>
-          <select
-            className="form-control"
-            value={filterCategory}
-            onChange={(e) => setFilterCategory(e.target.value)}
-          >
-            <option value="">Toutes les catégories</option>
-            {CATEGORIES.map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
-          <input
-            type="date"
-            className="form-control"
-            value={filterStartDate}
-            onChange={(e) => setFilterStartDate(e.target.value)}
-            placeholder="Date début"
-          />
-          <input
-            type="date"
-            className="form-control"
-            value={filterEndDate}
-            onChange={(e) => setFilterEndDate(e.target.value)}
-            placeholder="Date fin"
-          />
-          <button onClick={handleReset} className="btn btn-outline">
-            Réinitialiser
-          </button>
-        </div>
-
-        <div className="section-card">
-          <p>
-            Total : <strong>{formatAmount(Math.abs(total))}</strong>
+        <div className="section-card flex-between">
+          <p>Total affiché</p>
+          <p style={{ color: total >= 0 ? 'var(--green)' : 'var(--red)', fontWeight: '700', fontSize: '18px' }}>
+            {total >= 0 ? '+' : ''}{formatAmount(total)}
           </p>
         </div>
 
@@ -204,7 +204,7 @@ const TransactionListPage = () => {
               >
                 <option value="">Catégorie</option>
                 {CATEGORIES.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
+                  <option key={cat} value={cat}>{CATEGORY_ICONS[cat]} {cat}</option>
                 ))}
               </select>
               <input
@@ -214,15 +214,9 @@ const TransactionListPage = () => {
                 value={editForm.description}
                 onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
               />
-              <div>
-                <button type="submit" className="btn">Sauvegarder</button>
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={() => setEditingTransaction(null)}
-                >
-                  Annuler
-                </button>
+              <div className="flex-gap">
+                <button type="submit" className="btn btn-sm">Sauvegarder</button>
+                <button type="button" className="btn-danger btn-sm" onClick={() => setEditingTransaction(null)}>Annuler</button>
               </div>
             </form>
           </div>
@@ -232,35 +226,41 @@ const TransactionListPage = () => {
           {filteredTransactions.length === 0 ? (
             <p>Aucune transaction pour ces critères.</p>
           ) : (
-            <div>
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Montant</th>
-                    <th>Catégorie</th>
-                    <th>Description</th>
-                    <th>Actions</th>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Type</th>
+                  <th>Montant</th>
+                  <th>Catégorie</th>
+                  <th>Description</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredTransactions.map((t) => (
+                  <tr key={t.id}>
+                    <td>{formatDate(t.date)}</td>
+                    <td>
+                      <span className={`badge ${t.type === 'income' ? 'badge-income' : 'badge-expense'}`}>
+                        {t.type === 'income' ? 'Revenu' : 'Dépense'}
+                      </span>
+                    </td>
+                    <td style={{ color: t.type === 'income' ? 'var(--green)' : 'var(--red)', fontWeight: '600' }}>
+                      {t.type === 'income' ? '+' : '-'}{formatAmount(t.amount)}
+                    </td>
+                    <td>{t.category ? `${CATEGORY_ICONS[t.category] || ''} ${t.category}` : '—'}</td>
+                    <td>{t.description || '—'}</td>
+                    <td>
+                      <div className="flex-gap">
+                        <button onClick={() => handleEditClick(t)} className="btn btn-sm">Modifier</button>
+                        <button onClick={() => handleDelete(t.id)} className="btn-danger">Supprimer</button>
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {filteredTransactions.map((t) => (
-                    <tr key={t.id}>
-                      <td>{formatDate(t.date)}</td>
-                      <td>{t.type === 'income' ? 'Revenu' : 'Dépense'}</td>
-                      <td>{t.type === 'income' ? '+' : '-'}{formatAmount(t.amount)}</td>
-                      <td>{t.category ? `${CATEGORY_ICONS[t.category] || ''} ${t.category}` : '—'}</td>
-                      <td>{t.description || '—'}</td>
-                      <td>
-                        <button onClick={() => handleEditClick(t)} className="btn">Modifier</button>
-                        <button onClick={() => handleDelete(t.id)} className="btn btn-danger">Supprimer</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           )}
         </div>
 

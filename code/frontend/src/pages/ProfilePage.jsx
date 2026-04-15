@@ -61,68 +61,64 @@ const ProfilePage = () => {
       <Navbar />
       <div className="container">
 
-        <div className="section-card">
-          <h2>Profil</h2>
-          <p>Informations de votre compte.</p>
-        </div>
-
-        <div className="section-card">
-          <h3>Informations personnelles</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
-            <div>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '4px' }}>Prénom</p>
-              <p style={{ fontSize: '15px', fontWeight: '500' }}>{user?.firstName || '—'}</p>
-            </div>
-            <div>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '4px' }}>Nom</p>
-              <p style={{ fontSize: '15px', fontWeight: '500' }}>{user?.lastName || '—'}</p>
-            </div>
-            <div>
-              <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '4px' }}>Email</p>
-              <p style={{ fontSize: '15px', fontWeight: '500' }}>{user?.email || '—'}</p>
-            </div>
+        <div className="dashboard-header">
+          <div>
+            <h2>Profil</h2>
+            <p>Gérez vos informations et votre budget mensuel.</p>
           </div>
         </div>
 
-        <div className="section-card">
-          <h3>Budget mensuel</h3>
-          {currentLimit > 0 ? (
-            <p style={{ marginBottom: '16px', fontSize: '14px', color: 'var(--text-muted)' }}>
-              Limite actuelle :&nbsp;
-              <span style={{ color: 'var(--accent-light)', fontWeight: '600' }}>
-                {formatAmount(currentLimit)}
-              </span>
-            </p>
-          ) : (
-            <p style={{ marginBottom: '16px', fontSize: '14px', color: 'var(--text-muted)' }}>
-              Aucun budget mensuel défini.
-            </p>
-          )}
+        <div className="profile-grid">
 
-          {success && <p className="success-text">{success}</p>}
-          {error && <p className="error-text">{error}</p>}
+          <div className="section-card">
+            <h3>Informations personnelles</h3>
+            <div className="profile-field">
+              <label>Prénom</label>
+              <p>{user?.firstName || '—'}</p>
+            </div>
+            <div className="profile-field">
+              <label>Nom</label>
+              <p>{user?.lastName || '—'}</p>
+            </div>
+            <div className="profile-field">
+              <label>Email</label>
+              <p>{user?.email || '—'}</p>
+            </div>
+          </div>
 
-          <form onSubmit={handleSetBudget} className="transaction-form">
-            <input
-              type="number"
-              className="form-control"
-              placeholder="Nouveau budget mensuel ($)"
-              value={monthlyLimit}
-              onChange={(e) => setMonthlyLimit(e.target.value)}
-              min="0.01"
-              step="0.01"
-              required
-            />
-            <button
-              type="submit"
-              className="btn"
-              style={{ width: 'auto', padding: '12px 24px' }}
-            >
-              Définir le budget
-            </button>
-          </form>
+          <div className="section-card">
+            <h3>Budget mensuel</h3>
+
+            {currentLimit > 0 ? (
+              <div className="alert alert-success" style={{ marginBottom: '20px' }}>
+                <span>Limite actuelle : <strong>{formatAmount(currentLimit)}</strong></span>
+              </div>
+            ) : (
+              <p style={{ marginBottom: '20px' }}>Aucun budget mensuel défini.</p>
+            )}
+
+            {success && <p className="success-text">{success}</p>}
+            {error && <p className="error-text">{error}</p>}
+
+            <form onSubmit={handleSetBudget} className="transaction-form">
+              <input
+                type="number"
+                className="form-control"
+                placeholder="Nouveau budget mensuel ($)"
+                value={monthlyLimit}
+                onChange={(e) => setMonthlyLimit(e.target.value)}
+                min="0.01"
+                step="0.01"
+                required
+                style={{ gridColumn: 'span 2' }}
+              />
+              <button type="submit" className="btn">
+                Définir le budget
+              </button>
+            </form>
+          </div>
+
         </div>
-
       </div>
     </div>
   )
