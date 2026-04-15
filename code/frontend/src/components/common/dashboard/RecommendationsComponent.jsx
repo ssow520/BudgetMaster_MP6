@@ -42,9 +42,6 @@ const RecommendationsComponent = ({ income = 0, expenses = 0 }) => {
 
   return (
     <div className={recommendationClass}>
-      <button onClick={() => setVisible(false)} className="btn-close" aria-label="Fermer">
-        ×
-      </button>
       <h3>{title}</h3>
       <p>{message}</p>
     </div>
