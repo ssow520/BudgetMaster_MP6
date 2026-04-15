@@ -173,3 +173,18 @@ export const filter = async (req, res) => {
     });
   }
 };
+export const exportCSV = (req, res) => {
+  try {
+    const csv = facade.exportTransactionsAsCSV(req.user.userId);
+    const date = new Date().toISOString().split('T')[0];
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename=budgetmaster_export_${date}.csv`);
+    return res.status(HTTP_STATUS.OK).send(csv);
+  } catch (error) {
+    logger.error(`[TransactionController] Erreur exportCSV: ${error.message}`);
+    return res.status(HTTP_STATUS.INTERNAL_ERROR).json({
+      success: false,
+      message: "Erreur lors de l'export CSV"
+    });
+  }
+};

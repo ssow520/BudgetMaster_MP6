@@ -273,18 +273,6 @@
       "date": "2026-04-02T05:42:58.412Z"
     },
     {
-      "id": "33a084e9-8f10-4682-9f1a-5870988d433a",
-      "userId": "d218e6d3-3bc1-4e79-9f58-3b6df76aa049",
-      "type": "expense",
-      "amount": 3700,
-      "category": "Salaire",
-      "frequency": "one_time",
-      "description": "",
-      "date": "2026-04-01T00:00:00.000Z",
-      "createdAt": "2026-04-14T17:35:28.122Z",
-      "updatedAt": "2026-04-14T17:35:28.122Z"
-    },
-    {
       "id": "895cff4a-476a-43fb-849a-7ce17ce4b2b6",
       "userId": "d218e6d3-3bc1-4e79-9f58-3b6df76aa049",
       "type": "income",
@@ -307,6 +295,30 @@
       "date": "2026-04-14T00:00:00.000Z",
       "createdAt": "2026-04-14T17:47:38.425Z",
       "updatedAt": "2026-04-14T17:47:38.425Z"
+    },
+    {
+      "id": "3db60829-560b-41e7-9c64-2de172ffc296",
+      "userId": "d218e6d3-3bc1-4e79-9f58-3b6df76aa049",
+      "type": "expense",
+      "amount": 300,
+      "category": "Loisirs",
+      "frequency": "one_time",
+      "description": "",
+      "date": "2026-04-15T00:00:00.000Z",
+      "createdAt": "2026-04-15T07:15:40.114Z",
+      "updatedAt": "2026-04-15T07:15:40.114Z"
+    },
+    {
+      "id": "23e26b6f-a1c4-4450-b092-4d81ace97fd8",
+      "userId": "d218e6d3-3bc1-4e79-9f58-3b6df76aa049",
+      "type": "expense",
+      "amount": 60,
+      "category": "Alimentation",
+      "frequency": "one_time",
+      "description": "",
+      "date": "2026-04-15T00:00:00.000Z",
+      "createdAt": "2026-04-15T07:16:23.956Z",
+      "updatedAt": "2026-04-15T07:16:23.956Z"
     }
   ],
   "budgets": []
