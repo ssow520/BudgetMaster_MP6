@@ -3,6 +3,7 @@ import Navbar from '../components/common/Navbar'
 import TransactionForm from '../components/transactions/TransactionForm'
 import SummaryComponent from '../components/common/dashboard/SummaryComponent'
 import RecommendationsComponent from '../components/common/dashboard/RecommendationsComponent'
+import CategoryBreakdownComponent from '../components/common/dashboard/CategoryBreakdownComponent'
 import apiClient from '../services/apiClient'
 
 const DashboardPage = () => {
@@ -12,15 +13,19 @@ const DashboardPage = () => {
     balance: 0,
     indicator: 'balanced',
     recommendations: [],
+    monthlyLimit: 0,
   })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [exporting, setExporting] = useState(false)
+  const [alertVisible, setAlertVisible] = useState(true)
 
   const loadSummary = async () => {
     try {
       const response = await apiClient.get('/budget/summary')
       if (response.data && response.data.success) {
         setSummary(response.data.data)
+        setAlertVisible(true)
       }
     } catch (err) {
       setError('Erreur lors du chargement du tableau de bord')
@@ -38,9 +43,34 @@ const DashboardPage = () => {
       await apiClient.post('/transactions', transaction)
       await loadSummary()
     } catch (err) {
-      setError('Erreur lors de l\'ajout de la transaction')
+      setError("Erreur lors de l'ajout de la transaction")
     }
   }
+
+  const handleExportCSV = async () => {
+    setExporting(true)
+    try {
+      const response = await apiClient.get('/transactions/export', {
+        responseType: 'blob',
+      })
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      const date = new Date().toISOString().split('T')[0]
+      link.href = url
+      link.setAttribute('download', `budgetmaster_export_${date}.csv`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      window.URL.revokeObjectURL(url)
+    } catch (err) {
+      setError("Erreur lors de l'export CSV")
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  const formatAmount = (amount) =>
+    new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' }).format(amount)
 
   if (loading) {
     return (
@@ -53,16 +83,42 @@ const DashboardPage = () => {
     )
   }
 
+  const budgetRemaining = summary.monthlyLimit > 0
+    ? summary.monthlyLimit - summary.totalExpenses
+    : null
+
+  const isOverBudget = budgetRemaining !== null && budgetRemaining < 0
+
   return (
     <div>
       <Navbar />
       <div className="container">
+
         <div className="section-card">
           <h2>Tableau de bord</h2>
           <p>Bienvenue dans votre espace budgétaire.</p>
+          <button
+            onClick={handleExportCSV}
+            className="btn"
+            disabled={exporting}
+          >
+            {exporting ? 'Export...' : 'Exporter CSV'}
+          </button>
         </div>
 
         {error && <p className="error-text">{error}</p>}
+
+        {budgetRemaining !== null && alertVisible && (
+          <div className="section-card">
+            <button onClick={() => setAlertVisible(false)} aria-label="Fermer">×</button>
+            <p>
+              {isOverBudget
+                ? `⚠ Budget dépassé de ${formatAmount(Math.abs(budgetRemaining))}`
+                : `Budget restant ce mois : ${formatAmount(budgetRemaining)}`
+              }
+            </p>
+          </div>
+        )}
 
         <div className="section-card">
           <SummaryComponent
@@ -78,9 +134,14 @@ const DashboardPage = () => {
           />
         </div>
 
+         <div className="section-card">
+          <CategoryBreakdownComponent />
+        </div>
+
         <div className="section-card">
           <TransactionForm onSubmit={handleAddTransaction} />
         </div>
+
       </div>
     </div>
   )
