@@ -1,5 +1,5 @@
 # Nom du projet
-B-GETSTER
+Budget Master 
 
 ## Présentation gécountérale
 Ce projet consiste à développer une application permettant aux personnes de favoriser l'organisation dans la vie financiere surtout pour les jeunes adultes a gerer leur argent et la façon dont ils le depensent. **[description très courte du produit]**.
@@ -46,4 +46,4 @@ Les documents suivants sont disponibles dans le dossier `/documentation` :
 ---
 
 ## Statut du projet
-Projet en cours – version académique.
+Projet en cours.

@@ -3,7 +3,7 @@
  
 **Équipe :** Souleymane Sow, Moses Kasindi, Ruth Kegmo
 **Session :** H2026 — Collège LaSalle
-**Tableau de bord agile :** [Asana](https://app.asana.com)
+**Tableau de bord agile :** [Asana](https://app.asana.com/1/1213298021800524/project/1213303786003588/list/1213303344835468)
  
 ---
 
